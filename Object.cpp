@@ -11,7 +11,5 @@ GameObject::GameObject(TextureName const & name, sf::Vector2f position)
 	sprite.setOrigin(texSize.x*0.5f, texSize.y*0.5f);
 	sprite.setPosition(position);
 
-	ObjectManager::AddObject(this);
-
 	NewID();
 }

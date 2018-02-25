@@ -44,7 +44,6 @@ protected:
 class GameObject : public Object
 {
 public:
-	GameObject() {};
 	GameObject(TextureName const & name, sf::Vector2f position = sf::Vector2f(0, 0));
 
 	int GetUniqueID() { return id; }

@@ -1,19 +1,12 @@
 #include "ObjectManager.h"
 #include "Object.h"
 
-std::vector<GameObject*> ObjectManager::objects;
+std::vector<std::unique_ptr<GameObject>> ObjectManager::objects;
 
-void ObjectManager::Destroy()
+GameObject * ObjectManager::CreateObject(TextureName const & name, sf::Vector2f position)
 {
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-		delete objects[i];
-	}
-}
-
-void ObjectManager::AddObject(GameObject* obj)
-{
-	objects.push_back(obj);
+	objects.push_back(std::make_unique<GameObject>(name, position));
+	return objects.back().get();
 }
 
 void ObjectManager::DrawObjects(sf::RenderTarget& target)

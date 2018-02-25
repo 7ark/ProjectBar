@@ -34,7 +34,6 @@ int main()
 		mainGame.Draw(window);
 		window.display();
 	}
-	ObjectManager::Destroy();
 
 	return 0;
 }
