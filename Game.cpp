@@ -17,12 +17,13 @@ Game::~Game()
 
 void Game::Setup()
 {
-
+	GameObject* obj1 = ObjectManager::CreateObject("Obj1", TextureName::Example, sf::Vector2f(20, 0));
+	GameObject* obj2 = ObjectManager::CreateObject("Obj2", TextureName::Example, sf::Vector2f(-20, 0));
 }
 
 void Game::Update(float deltaTime)
 {
-	//std::cout << "Updating: " << deltaTime;
+
 }
 
 void Game::Draw(sf::RenderTarget & target)

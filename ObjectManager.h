@@ -15,8 +15,11 @@ public:
 	static GameObject* Find(std::string name);
 	static GameObject* Find(int id);
 
+	static void UpdateLayerOrder();
 
 private:
 	static std::vector<std::unique_ptr<GameObject>> objects;
+
+	static bool SortByLayer(std::unique_ptr<GameObject> const & a, std::unique_ptr<GameObject> const&  b);
 };
 

@@ -49,11 +49,14 @@ public:
 	GameObject(std::string _name, TextureName const & textureName, sf::Vector2f position = sf::Vector2f(0, 0));
 
 	int GetUniqueID() { return id; }
+	void SetLayer(int l) { layer = l; ObjectManager::UpdateLayerOrder(); }
+	int GetLayer() { return layer; }
 
 private:
 	sf::Sprite sprite;
 	static int globalId;
 	int id;
+	unsigned int layer = 0;
 
 	void NewID()
 	{
