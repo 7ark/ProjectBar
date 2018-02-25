@@ -44,7 +44,9 @@ protected:
 class GameObject : public Object
 {
 public:
-	GameObject(TextureName const & name, sf::Vector2f position = sf::Vector2f(0, 0));
+	std::string name;
+
+	GameObject(std::string _name, TextureName const & textureName, sf::Vector2f position = sf::Vector2f(0, 0));
 
 	int GetUniqueID() { return id; }
 

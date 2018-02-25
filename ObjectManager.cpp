@@ -3,9 +3,9 @@
 
 std::vector<std::unique_ptr<GameObject>> ObjectManager::objects;
 
-GameObject * ObjectManager::CreateObject(TextureName const & name, sf::Vector2f position)
+GameObject * ObjectManager::CreateObject(std::string _name, TextureName const & textureName, sf::Vector2f position)
 {
-	objects.push_back(std::make_unique<GameObject>(name, position));
+	objects.push_back(std::make_unique<GameObject>(_name, textureName, position));
 	return objects.back().get();
 }
 
@@ -15,4 +15,24 @@ void ObjectManager::DrawObjects(sf::RenderTarget& target)
 	{
 		objects[i]->draw(target);
 	}
+}
+
+GameObject * ObjectManager::Find(std::string name)
+{
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		if (objects[i].get()->name == name)
+			return objects[i].get();
+	}
+	return nullptr;
+}
+
+GameObject * ObjectManager::Find(int id)
+{
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		if (objects[i].get()->GetUniqueID() == id)
+			return objects[i].get();
+	}
+	return nullptr;
 }

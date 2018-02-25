@@ -10,8 +10,11 @@ void ResourceManager::Init()
 
 sf::Texture* ResourceManager::RetrieveTexture(TextureName tex)
 {
-	if (tex == TextureName::Null || tex == TextureName::Length)
+	if (tex == TextureName::Null || tex == TextureName::Length) 
+	{
+		std::cout << "ERROR: Attempted to retrieve invalid texture";
 		return nullptr;
+	}
 	sf::Texture* returnedTexture = textures[tex];
 	if (returnedTexture == nullptr)
 	{
