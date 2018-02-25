@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "ObjectManager.h"
-#include "Object.h"
+#include "GameObject.h"
+#include "Animation.h"
 
 ResourceManager Game::resourceManager;
 
@@ -17,13 +18,58 @@ Game::~Game()
 
 void Game::Setup()
 {
-	GameObject* obj1 = ObjectManager::CreateObject("Obj1", TextureName::Example, sf::Vector2f(20, 0));
-	GameObject* obj2 = ObjectManager::CreateObject("Obj2", TextureName::Example, sf::Vector2f(-20, 0));
+	player = ObjectManager::CreateObject("Player", TextureName::Example);
+	Animation* ani = player->AddComponent<Animation>();
+	Key keys[6]
+	{
+		Key(0.25f, TextureName::run1),
+		Key(0.5f, TextureName::run2),
+		Key(0.75f, TextureName::run3),
+		Key(1, TextureName::run4),
+		Key(1.25f, TextureName::run5),
+		Key(1.5f, TextureName::run6),
+	};
+	ani->SetKeys(keys, 6);
+	ani->Play();
 }
+
+void Game::Run(sf::RenderWindow& window,sf::View& view)
+{
+	sf::Clock clock;
+
+	//Game loop
+	while (window.isOpen())
+	{
+		CheckEvents(window);
+		Update(clock.getElapsedTime().asSeconds());
+
+		window.clear();
+		window.setView(view);
+		Draw(window);
+		window.display();
+	}
+}
+
+void Game::CheckEvents(sf::RenderWindow& window)
+{
+	sf::Event event;
+	while (window.pollEvent(event))
+	{
+		switch (event.type)
+		{
+		case sf::Event::Closed:
+			window.close();
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 
 void Game::Update(float deltaTime)
 {
-
+	ObjectManager::UpdateObjects(deltaTime);
 }
 
 void Game::Draw(sf::RenderTarget & target)

@@ -16,6 +16,7 @@ public:
 	static GameObject* Find(int id);
 
 	static void UpdateLayerOrder();
+	static void UpdateObjects(float deltaTime);
 
 private:
 	static std::vector<std::unique_ptr<GameObject>> objects;

@@ -1,13 +1,14 @@
 #include "ObjectManager.h"
-#include "Object.h"
+#include "GameObject.h"
 
 std::vector<std::unique_ptr<GameObject>> ObjectManager::objects;
 
 GameObject * ObjectManager::CreateObject(std::string _name, TextureName const & textureName, sf::Vector2f position)
 {
 	objects.push_back(std::make_unique<GameObject>(_name, textureName, position));
+	GameObject* result = objects.back().get();
 	UpdateLayerOrder();
-	return objects.back().get();
+	return result;
 }
 
 void ObjectManager::DrawObjects(sf::RenderTarget& target)
@@ -26,6 +27,14 @@ bool ObjectManager::SortByLayer(std::unique_ptr<GameObject> const & a, std::uniq
 void ObjectManager::UpdateLayerOrder()
 {
 	std::sort(objects.begin(), objects.end(), SortByLayer);
+}
+
+void ObjectManager::UpdateObjects(float deltaTime)
+{
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		objects[i].get()->Update(deltaTime);
+	}
 }
 
 GameObject * ObjectManager::Find(std::string name)

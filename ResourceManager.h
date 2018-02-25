@@ -6,17 +6,28 @@ enum class TextureName
 {
 	Null = 0,
 	Example,
+	run1,
+	run2,
+	run3,
+	run4,
+	run5,
+	run6,
 
 	Length
 };
 
 class ResourceManager
 {
-	std::string* TexturePaths = new std::string[3]
+	const char* texturePaths[(int)TextureName::Length] =
 	{
 		"Null",
-		"Textures\\Example.png",
-		"Length"
+		"Textures//Example.png",
+		"Textures//run1.png",
+		"Textures//run2.png",
+		"Textures//run3.png",
+		"Textures//run4.png",
+		"Textures//run5.png",
+		"Textures//run6.png"
 	};
 
 public:

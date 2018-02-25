@@ -4,7 +4,7 @@ void ResourceManager::Init()
 {
 	for (int i = 1; i < (int)TextureName::Length; i++)
 	{
-		CreateTexture(TexturePaths[i], (TextureName)i);
+		CreateTexture(texturePaths[i], (TextureName)i);
 	}
 }
 
@@ -18,14 +18,14 @@ sf::Texture* ResourceManager::RetrieveTexture(TextureName tex)
 	sf::Texture* returnedTexture = textures[tex];
 	if (returnedTexture == nullptr)
 	{
-		returnedTexture = CreateTexture(TexturePaths[(int)tex], tex);
+		returnedTexture = CreateTexture(texturePaths[(int)tex], tex);
 	}
 	return returnedTexture;
 }
 
 void ResourceManager::Destroy()
 {
-	delete TexturePaths;
+	delete[] texturePaths;
 }
 
 sf::Texture* ResourceManager::CreateTexture(std::string const & textureFile, TextureName tex)

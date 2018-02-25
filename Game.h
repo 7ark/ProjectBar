@@ -2,6 +2,8 @@
 #include "Common.h"
 #include "ResourceManager.h"
 
+#include "Component.h"
+
 class GameObject;
 
 class Game
@@ -12,6 +14,9 @@ public:
 	Game();
 	~Game();
 
+	void Run(sf::RenderWindow& window, sf::View& view);
+	void CheckEvents(sf::RenderWindow& window);
+
 	void Update(float deltaTime);
 
 	void Draw(sf::RenderTarget& target);
@@ -19,6 +24,8 @@ public:
 private:
 
 	void Setup();
+
+	GameObject* player;
 
 };
 
