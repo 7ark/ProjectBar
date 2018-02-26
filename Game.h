@@ -25,7 +25,7 @@ private:
 
 	void Setup();
 
-	GameObject* player;
+	GameObject* bartender;
 
 };
 

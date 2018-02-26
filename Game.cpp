@@ -18,19 +18,12 @@ Game::~Game()
 
 void Game::Setup()
 {
-	player = ObjectManager::CreateObject("Player", TextureName::Example);
-	Animation* ani = player->AddComponent<Animation>();
-	Key keys[6]
-	{
-		Key(0.25f, TextureName::run1),
-		Key(0.5f, TextureName::run2),
-		Key(0.75f, TextureName::run3),
-		Key(1, TextureName::run4),
-		Key(1.25f, TextureName::run5),
-		Key(1.5f, TextureName::run6),
-	};
-	ani->SetKeys(keys, 6);
-	ani->Play();
+	GameObject* background = ObjectManager::CreateObject("BarBackground", TextureName::BarBackground);
+	background->SetLayer(-1);
+	background->transform.scale(sf::Vector2f(2, 2));
+	GameObject* counter = ObjectManager::CreateObject("Counter", TextureName::BarCounter, sf::Vector2f(100, -400));
+	bartender = ObjectManager::CreateObject("Bartender", TextureName::Bartender, sf::Vector2f(300,-250));
+	bartender->SetLayer(2);
 }
 
 void Game::Run(sf::RenderWindow& window,sf::View& view)
@@ -43,7 +36,7 @@ void Game::Run(sf::RenderWindow& window,sf::View& view)
 		CheckEvents(window);
 		Update(clock.getElapsedTime().asSeconds());
 
-		window.clear();
+		window.clear(sf::Color::White);
 		window.setView(view);
 		Draw(window);
 		window.display();

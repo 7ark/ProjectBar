@@ -15,6 +15,10 @@ void Object::SetParent(Object* obj)
 
 Object::~Object()
 {
-	if (parent != nullptr)
-		delete parent;
+	if (parent != nullptr) 
+	{
+		parent->children.erase(
+			std::remove(parent->children.begin(), parent->children.end(), this), 
+			parent->children.end());
+	}
 }

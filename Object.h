@@ -10,7 +10,7 @@ public:
 
 	void SetParent(Object* obj);
 
-	std::vector<Object*> GetChildren() const
+	const std::vector<Object*>& GetChildren() const
 	{
 		return children;
 	}
