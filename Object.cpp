@@ -4,14 +4,15 @@ int Object::globalId = 0;
 
 void Object::draw(sf::RenderTarget& target)
 {
-	if (enabled && visible)
+	bool canDraw = enabled && visible;
+	if (canDraw)
 	{
 		sf::Transformable combinedTransform = transform;
 		if (parent != nullptr)
 		{
 			combinedTransform.setScale(transform.getScale().x*parent->transform.getScale().x, transform.getScale().y*parent->transform.getScale().y);
-			combinedTransform.setPosition(transform.getPosition().x*parent->transform.getPosition().x, transform.getPosition().y*parent->transform.getPosition().y);
-			combinedTransform.setRotation(transform.getRotation()*parent->transform.getRotation());
+			combinedTransform.setPosition(transform.getPosition() + parent->transform.getPosition());
+			combinedTransform.setRotation(transform.getRotation() + parent->transform.getRotation());
 		}
 
 		onDraw(target, combinedTransform);

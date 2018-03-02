@@ -13,11 +13,13 @@ public:
 	void SetText(sf::String txt) { text.setString(txt); }
 	void SetFont(sf::Font& font) { text.setFont(font); }
 	void SetColor(sf::Color col) { text.setFillColor(col); }
+	void SetSize(unsigned int size) { text.setCharacterSize(size); }
 
 	//Getters
 	sf::String GetText() { return text.getString(); }
 	sf::Font GetFont() { return *text.getFont(); }
 	sf::Color GetColor() { return text.getFillColor(); }
+	unsigned int GetSize() { return text.getCharacterSize(); }
 
 protected:
 	sf::Text text;
