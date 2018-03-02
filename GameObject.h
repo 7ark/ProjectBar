@@ -10,24 +10,15 @@ class Game;
 class GameObject : public Object
 {
 public:
-	std::string name = "Null";
-
-	GameObject(std::string _name, TextureName const & textureName, sf::Vector2f position = sf::Vector2f(0, 0));
+	GameObject(std::string _name, Textures const & textureName, sf::Vector2f position = sf::Vector2f(0, 0));
 
 	void Update(float deltaTime);
 
 	//Getters
-	int GetUniqueID() { return id; }
-	int GetLayer() { return layer; }
 	sf::Sprite GetSprite() { return sprite; }
-	bool GetActive() { return enabled; }
-	bool GetVisible() { return visible; }
 
 	//Setters
-	void SetLayer(int l) { layer = l; ObjectManager::UpdateLayerOrder(); }
 	void SetSprite(sf::Texture* texture, bool centered = true);
-	void SetActive(bool active) { enabled = active; }
-	void SetVisible(bool vis) { visible = vis; }
 
 	template<class T>
 	T* AddComponent(Comp componentType)
@@ -51,20 +42,16 @@ public:
 	}
 
 protected:
-	static int globalId;
-	int id = 0;
-	int layer = 0;
-	bool enabled = true;
-	bool visible = true;
+	sf::Sprite sprite;
+
 	std::vector<std::unique_ptr<Component>> components;
 
-	void Init(std::string _name, TextureName const & textureName, sf::Vector2f position);
-	void NewID() { id = ++globalId; }
-
-	virtual void onDraw(sf::RenderTarget& target) const
+	virtual void onDraw(sf::RenderTarget& target, sf::Transformable& transform)
 	{
-		if(enabled && visible)
-			target.draw(sprite);
+		sprite.setPosition(transform.getPosition());
+		sprite.setScale(transform.getScale());
+		sprite.setRotation(transform.getRotation());
+		target.draw(sprite);
 	}
 };
 

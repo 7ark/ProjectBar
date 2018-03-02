@@ -2,9 +2,9 @@
 #include <unordered_map>
 #include "Common.h"
 
-enum class TextureName
+enum class Textures
 {
-	Null = 0,
+	Null,
 	Bartender,
 	BarBackground,
 	BarCounter,
@@ -13,9 +13,18 @@ enum class TextureName
 	Length
 };
 
+enum class Fonts
+{
+	Null,
+	Hughs,
+
+	Length
+};
+
 class ResourceManager
 {
-	const char* texturePaths[(int)TextureName::Length] =
+#pragma region Paths
+	const char* texturePaths[(int)Textures::Length] =
 	{
 		"Null",
 		"Textures/Bartender.png",
@@ -24,13 +33,23 @@ class ResourceManager
 		"Textures/Journal.png"
 	};
 
+	const char* fontPaths[(int)Fonts::Length] = 
+	{
+		"Null",
+		"Fonts/Hughs.otf"
+	};
+#pragma endregion
+
 public:
 	void Init();
-	sf::Texture* RetrieveTexture(TextureName tex);
+	sf::Texture* RetrieveTexture(Textures tex);
+	sf::Font* RetrieveFont(Fonts font);
 	void Destroy();
 
 private:
-	std::unordered_map<TextureName, sf::Texture*> textures;
+	std::unordered_map<Textures, sf::Texture*> textures;
+	std::unordered_map<Fonts, sf::Font*> fonts;
 
-	sf::Texture* CreateTexture(std::string const& textureFile, TextureName tex);
+	sf::Texture* CreateTexture(std::string const& textureFile, Textures tex);
+	sf::Font* CreateFont(std::string const& fontFile, Fonts font);
 };

@@ -1,25 +1,32 @@
 #include "Object.h"
 
+int Object::globalId = 0;
+
 void Object::draw(sf::RenderTarget& target)
 {
-	sf::Transformable combinedTransform = transform;// parent == nullptr ? this : getTransform() * parent->getTransform();
-	if (parent != nullptr) 
+	if (enabled && visible)
 	{
-		combinedTransform.setScale(transform.getScale().x*parent->transform.getScale().x, transform.getScale().y*parent->transform.getScale().y);
-		combinedTransform.setPosition(transform.getPosition().x*parent->transform.getPosition().x, transform.getPosition().y*parent->transform.getPosition().y);
-		combinedTransform.setRotation(transform.getRotation()*parent->transform.getRotation());
-	}
-	sprite.setPosition(combinedTransform.getPosition());
-	sprite.setScale(combinedTransform.getScale());
-	sprite.setRotation(combinedTransform.getRotation());
+		sf::Transformable combinedTransform = transform;
+		if (parent != nullptr)
+		{
+			combinedTransform.setScale(transform.getScale().x*parent->transform.getScale().x, transform.getScale().y*parent->transform.getScale().y);
+			combinedTransform.setPosition(transform.getPosition().x*parent->transform.getPosition().x, transform.getPosition().y*parent->transform.getPosition().y);
+			combinedTransform.setRotation(transform.getRotation()*parent->transform.getRotation());
+		}
 
-	onDraw(target);
+		onDraw(target, combinedTransform);
+	}
 }
 
 void Object::SetParent(Object* obj)
 {
 	parent = obj;
 	obj->children.push_back(this);
+}
+
+Object::Object()
+{
+	NewID();
 }
 
 Object::~Object()

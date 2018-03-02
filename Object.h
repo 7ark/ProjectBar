@@ -1,11 +1,14 @@
 #pragma once
 #include "Common.h"
+#include "ObjectManager.h"
 
 class Object
 {
 public:
+	std::string name = "Null";
 
 	void draw(sf::RenderTarget& target);
+	virtual void Update(float deltaTime) {};
 
 	void SetParent(Object* obj);
 
@@ -14,6 +17,7 @@ public:
 		return children;
 	}
 
+	//Movement
 	void SetPosition(sf::Vector2f pos) { transform.setPosition(pos.x, -pos.y); }
 	void Translate(sf::Vector2f pos) { transform.move(pos); }
 	void SetScale(sf::Vector2f scale) { transform.setScale(scale); }
@@ -21,16 +25,36 @@ public:
 	void SetRotation(float angle) { transform.setRotation(angle); }
 	void Rotate(float angle) { transform.rotate(angle); }
 
-protected:
-	sf::Sprite sprite;
+	//Setters
+	void SetActive(bool active) { enabled = active; }
+	void SetVisible(bool vis) { visible = vis; }
+	void SetLayer(int l) { layer = l; ObjectManager::UpdateLayerOrder(); }
 
+	//Getters
+	bool GetActive() { return enabled; }
+	bool GetVisible() { return visible; }
+	int GetUniqueID() { return id; }
+	int GetLayer() { return layer; }
+
+
+	~Object();
+
+protected:
 	sf::Transformable transform;
 
-	virtual void onDraw(sf::RenderTarget& target) const = 0;
+	bool enabled = true;
+	bool visible = true;
+
+	static int globalId;
+	int id = 0;
+	void NewID() { id = ++globalId; }
+	int layer = 0;
+
+	virtual void onDraw(sf::RenderTarget& target, sf::Transformable& transform) = 0;
 
 	Object* parent = nullptr;
 	std::vector<Object*> children;
 
-	~Object();
+	Object();
 };
 

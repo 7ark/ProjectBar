@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "ObjectManager.h"
 #include "GameObject.h"
+#include "Text.h"
 #include "Animation.h"
 #include "JournalDisplay.h"
 
@@ -23,16 +24,16 @@ Game::~Game()
 
 void Game::Setup()
 {
-	GameObject* background = ObjectManager::CreateObject("BarBackground", TextureName::BarBackground);
+	GameObject* background = ObjectManager::CreateObject("BarBackground", Textures::BarBackground);
 	background->SetLayer(-1);
 	background->Scale(sf::Vector2f(2, 2));
 
-	GameObject* counter = ObjectManager::CreateObject("Counter", TextureName::BarCounter, sf::Vector2f(100, -300));
+	GameObject* counter = ObjectManager::CreateObject("Counter", Textures::BarCounter, sf::Vector2f(100, -300));
 
-	bartender = ObjectManager::CreateObject("Bartender", TextureName::Bartender, sf::Vector2f(300,-250));
+	bartender = ObjectManager::CreateObject("Bartender", Textures::Bartender, sf::Vector2f(300,-250));
 	bartender->SetLayer(2);
 
-	GameObject* journal = ObjectManager::CreateObject("Journal", TextureName::Journal, sf::Vector2f(0, -300));
+	GameObject* journal = ObjectManager::CreateObject("Journal", Textures::Journal, sf::Vector2f(0, -300));
 	journal->SetScale(sf::Vector2f(0.2f, 0.2f));
 	journal->AddComponent<JournalDisplay>(Comp::JournalDisplay);
 }

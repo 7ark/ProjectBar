@@ -5,7 +5,7 @@
 struct Key
 {
 	Key() {};
-	Key(float t, TextureName tex)
+	Key(float t, Textures tex)
 	{
 		time = t;
 		texture = Game::resourceManager.RetrieveTexture(tex);
