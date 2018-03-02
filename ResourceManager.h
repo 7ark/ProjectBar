@@ -8,6 +8,7 @@ enum class TextureName
 	Bartender,
 	BarBackground,
 	BarCounter,
+	Journal,
 
 	Length
 };
@@ -19,7 +20,8 @@ class ResourceManager
 		"Null",
 		"Textures/Bartender.png",
 		"Textures/BarBackground.png",
-		"Textures/BarCounter.png"
+		"Textures/BarCounter.png",
+		"Textures/Journal.png"
 	};
 
 public:

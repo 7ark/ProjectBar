@@ -2,8 +2,13 @@
 #include "ObjectManager.h"
 #include "GameObject.h"
 #include "Animation.h"
+#include "JournalDisplay.h"
 
 ResourceManager Game::resourceManager;
+
+sf::Vector2f Game::mousePos;
+sf::RenderWindow* Game::window;
+sf::View* Game::worldView;
 
 Game::Game()
 {
@@ -20,19 +25,30 @@ void Game::Setup()
 {
 	GameObject* background = ObjectManager::CreateObject("BarBackground", TextureName::BarBackground);
 	background->SetLayer(-1);
-	background->transform.scale(sf::Vector2f(2, 2));
-	GameObject* counter = ObjectManager::CreateObject("Counter", TextureName::BarCounter, sf::Vector2f(100, -400));
+	background->Scale(sf::Vector2f(2, 2));
+
+	GameObject* counter = ObjectManager::CreateObject("Counter", TextureName::BarCounter, sf::Vector2f(100, -300));
+
 	bartender = ObjectManager::CreateObject("Bartender", TextureName::Bartender, sf::Vector2f(300,-250));
 	bartender->SetLayer(2);
+
+	GameObject* journal = ObjectManager::CreateObject("Journal", TextureName::Journal, sf::Vector2f(0, -300));
+	journal->SetScale(sf::Vector2f(0.2f, 0.2f));
+	journal->AddComponent<JournalDisplay>(Comp::JournalDisplay);
 }
 
 void Game::Run(sf::RenderWindow& window,sf::View& view)
 {
+	Game::window = &window;
+	Game::worldView = &view;
 	sf::Clock clock;
 
 	//Game loop
 	while (window.isOpen())
 	{
+		sf::Vector2i m = sf::Mouse::getPosition(window);
+		mousePos = sf::Vector2f(m.x, m.y);
+
 		CheckEvents(window);
 		Update(clock.getElapsedTime().asSeconds());
 
@@ -68,4 +84,9 @@ void Game::Update(float deltaTime)
 void Game::Draw(sf::RenderTarget & target)
 {
 	ObjectManager::DrawObjects(target);
+}
+
+sf::Vector2f Game::MousePosition()
+{
+	return mousePos;
 }

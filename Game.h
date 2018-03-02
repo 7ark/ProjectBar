@@ -21,7 +21,15 @@ public:
 
 	void Draw(sf::RenderTarget& target);
 
+	static sf::Vector2f MousePosition();
+
+	static sf::RenderWindow* window;
+
+	static sf::View* worldView;
+
 private:
+
+	static sf::Vector2f mousePos;
 
 	void Setup();
 
