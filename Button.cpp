@@ -25,6 +25,7 @@ void Button::Update(float deltaTime)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !mouseDown)
 		{
+			CallDelegate(click);
 			Clicked();
 		}
 	}
@@ -36,9 +37,9 @@ void Button::Update(float deltaTime)
 	
 }
 
-void Button::CallDelegate(std::vector<Callback*> const & del)
+void Button::CallDelegate(std::vector<std::function<void()>> const& del)
 {
-	for (auto call : del)
+	for (auto&& call : del)
 	{
 		call();
 	}

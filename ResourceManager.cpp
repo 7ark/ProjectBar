@@ -44,8 +44,7 @@ sf::Font * ResourceManager::RetrieveFont(Fonts font)
 
 void ResourceManager::Destroy()
 {
-	delete[] texturePaths;
-	delete[] fontPaths;
+
 }
 
 sf::Texture* ResourceManager::CreateTexture(std::string const & textureFile, Textures tex)

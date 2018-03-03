@@ -10,6 +10,7 @@ enum class Textures
 	BarCounter,
 	Journal,
 	JournalOpen,
+	ArrowDrawn,
 
 	Length
 };
@@ -32,7 +33,8 @@ class ResourceManager
 		"Textures/BarBackground.png",
 		"Textures/BarCounter.png",
 		"Textures/Journal.png",
-		"Textures/JournalOpen.png"
+		"Textures/JournalOpen.png",
+		"Textures/ArrowDrawn.png"
 	};
 
 	const char* fontPaths[(int)Fonts::Length] = 

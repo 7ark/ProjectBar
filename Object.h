@@ -19,11 +19,17 @@ public:
 
 	//Movement
 	void SetPosition(sf::Vector2f pos) { transform.setPosition(pos.x, -pos.y); }
+	sf::Vector2f GetPosition() { return transform.getPosition(); }
 	void Translate(sf::Vector2f pos) { transform.move(pos); }
+
 	void SetScale(sf::Vector2f scale) { transform.setScale(scale); }
+	sf::Vector2f GetScale() { return transform.getScale(); }
 	void Scale(sf::Vector2f scale) { transform.scale(scale); }
+
 	void SetRotation(float angle) { transform.setRotation(angle); }
+	float GetRotation() { transform.getRotation(); }
 	void Rotate(float angle) { transform.rotate(angle); }
+
 
 	//Setters
 	void SetActive(bool active) { enabled = active; }
