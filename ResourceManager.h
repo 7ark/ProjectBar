@@ -11,6 +11,8 @@ enum class Textures
 	Journal,
 	JournalHighlight,
 	JournalOpen,
+	Newspaper,
+	NewspaperHighlight,
 	ArrowDrawn,
 
 	Length
@@ -36,6 +38,8 @@ class ResourceManager
 		"Textures/Journal.png",
 		"Textures/JournalHighlight.png",
 		"Textures/JournalOpen.png",
+		"Textures/Newspaper.png",
+		"Textures/NewspaperHighlight.png",
 		"Textures/ArrowDrawn.png"
 	};
 

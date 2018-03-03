@@ -3,7 +3,7 @@
 
 enum class Comp
 {
-	Animation, Button, JournalDisplay
+	Animation, Button, DisplayObject
 };
 
 class GameObject;

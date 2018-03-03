@@ -4,16 +4,20 @@
 
 class Game;
 
-class JournalDisplay : public Button
+class DisplayObject : public Button
 {
 public:
-	JournalDisplay();
-	~JournalDisplay();
+	DisplayObject();
+	~DisplayObject();
 
+	void Init(Textures const openImageTex, unsigned int const pageLength, char * const note[], Textures defaultTex, Textures hoverTex);
 	void Update(float deltaTime);
 
 private:
-	GameObject* openJournal;
+	sf::Texture* hoverTexture;
+	sf::Texture* defaultTexture;
+
+	GameObject* openedImage;
 	Text* displayTextLeft;
 	Text* displayTextRight; 
 	GameObject* changePageLeft;
@@ -37,14 +41,8 @@ private:
 	int currentPage = 0;
 	int fontSize = 23;
 	
-	static const unsigned int journalSize = 4;
+	static unsigned int pageSize;
 
-	const char* notes[journalSize] =
-	{
-		"Humans: Weak creatures that love\nto kill shit\n\nDrinks They Enjoy: Any kind of beer\n\nPoisonous: Acid",
-		"Animals: I don't know, I'm just\ntrying to fill up some of the space in this book.\n\nDrinks They Enjoy: Water???\n\nPoisonous: Literally everything",
-		"Something else: I'm just trying to fill\npages at this point to be honest.\n\nDrinks They Enjoy: Who?? \nThis isn't very specific\n\nPoisonous: Memes",
-		"Manpat: Best god damn #other-dev dude.\n\nDrinks They Enjoy: sarsaparilla and \norange juice\n\nPoisonous: Everything humans die from"
-	};
+	std::vector<char*> notes;
 };
 
