@@ -1,6 +1,7 @@
 #include "JournalDisplay.h"
 #include "Button.h"
 #include "GameObject.h"
+#include "Game.h"
 
 const unsigned int JournalDisplay::journalSize;
 
@@ -71,6 +72,16 @@ void JournalDisplay::Clicked()
 	displayTextRight->SetActive(!gameObject->GetVisible());
 	changePageLeft->SetActive(!gameObject->GetVisible());
 	changePageRight->SetActive(!gameObject->GetVisible());
+}
+
+void JournalDisplay::PointerEnter()
+{
+	gameObject->SetSprite(Game::resourceManager.RetrieveTexture(Textures::JournalHighlight));
+}
+
+void JournalDisplay::PointerExit()
+{
+	gameObject->SetSprite(Game::resourceManager.RetrieveTexture(Textures::Journal));
 }
 
 void JournalDisplay::UpdatePage()

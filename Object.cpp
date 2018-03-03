@@ -4,19 +4,14 @@ int Object::globalId = 0;
 
 void Object::draw(sf::RenderTarget& target)
 {
-	bool canDraw = enabled && visible;
-	if (canDraw)
+	sf::Transformable combinedTransform = transform;
+	if (parent != nullptr)
 	{
-		sf::Transformable combinedTransform = transform;
-		if (parent != nullptr)
-		{
-			combinedTransform.setScale(transform.getScale().x*parent->transform.getScale().x, transform.getScale().y*parent->transform.getScale().y);
-			combinedTransform.setPosition(transform.getPosition() + parent->transform.getPosition());
-			combinedTransform.setRotation(transform.getRotation() + parent->transform.getRotation());
-		}
-
-		onDraw(target, combinedTransform);
+		combinedTransform.setScale(transform.getScale().x*parent->transform.getScale().x, transform.getScale().y*parent->transform.getScale().y);
+		combinedTransform.setPosition(transform.getPosition() + parent->transform.getPosition());
+		combinedTransform.setRotation(transform.getRotation() + parent->transform.getRotation());
 	}
+	onDraw(target, combinedTransform);
 }
 
 void Object::SetParent(Object* obj)

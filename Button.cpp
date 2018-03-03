@@ -7,17 +7,21 @@ void Button::Update(float deltaTime)
 	sf::Vector2f pos = Game::window->mapPixelToCoords(sf::Mouse::getPosition(*Game::window));
 	if (gameObject->GetSprite().getGlobalBounds().contains(pos))
 	{
-		if (!inBox && pointerEnter.size() > 0)
+		if (!inBox)
 		{
-			CallDelegate(pointerEnter);
+			if(pointerEnter.size() > 0)
+				CallDelegate(pointerEnter);
+			PointerEnter();
 		}
 		inBox = true;
 	}
 	else
 	{
-		if (inBox && pointerExit.size() > 0)
+		if (inBox)
 		{
-			CallDelegate(pointerExit);
+			if(pointerExit.size() > 0)
+				CallDelegate(pointerExit);
+			PointerExit();
 		}
 		inBox = false;
 	}

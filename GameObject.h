@@ -51,7 +51,8 @@ protected:
 		sprite.setPosition(transform.getPosition());
 		sprite.setScale(transform.getScale());
 		sprite.setRotation(transform.getRotation());
-		target.draw(sprite);
+		if(enabled && visible)
+			target.draw(sprite);
 	}
 };
 

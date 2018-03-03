@@ -24,5 +24,7 @@ private:
 protected:
 	bool inBox = false;
 	bool mouseDown = false;
-	virtual void Clicked() { };
+	virtual void Clicked() {};
+	virtual void PointerEnter() {};
+	virtual void PointerExit() {};
 };

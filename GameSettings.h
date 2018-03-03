@@ -1,6 +1,6 @@
 #pragma once
 
-static class GameSettings
+class GameSettings
 {
 public:
 	static int width;

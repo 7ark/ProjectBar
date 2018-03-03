@@ -9,6 +9,7 @@ enum class Textures
 	BarBackground,
 	BarCounter,
 	Journal,
+	JournalHighlight,
 	JournalOpen,
 	ArrowDrawn,
 
@@ -33,6 +34,7 @@ class ResourceManager
 		"Textures/BarBackground.png",
 		"Textures/BarCounter.png",
 		"Textures/Journal.png",
+		"Textures/JournalHighlight.png",
 		"Textures/JournalOpen.png",
 		"Textures/ArrowDrawn.png"
 	};
