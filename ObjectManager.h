@@ -10,10 +10,12 @@ class Text;
 class ObjectManager
 {
 public:
-	static GameObject* CreateObject(std::string _name, Textures const & textureName, sf::Vector2f position = sf::Vector2f(0, 0));
-	static Text* CreateText(std::string _name, Fonts const & fontName, sf::String txt = "", sf::Vector2f position = sf::Vector2f(0, 0));
+	static GameObject* CreateObject(std::string _name, Scenes view, Textures const & textureName, sf::Vector2f position = sf::Vector2f(0, 0));
+	static Text* CreateText(std::string name, Scenes view, Fonts const & fontName, sf::String txt = "", sf::Vector2f position = sf::Vector2f(0, 0));
 
-	static void DrawObjects(sf::RenderTarget& target);
+	static void Destroy(const GameObject* obj);
+
+	static void DrawObjects(sf::RenderTarget& target, Scenes view);
 
 	static Object* Find(std::string name);
 	static Object* Find(int id);

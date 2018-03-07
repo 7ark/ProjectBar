@@ -4,6 +4,8 @@
 
 void Button::Update(float deltaTime)
 {
+	if (!enabled) 
+		return;
 	sf::Vector2f pos = Game::window->mapPixelToCoords(sf::Mouse::getPosition(*Game::window));
 	if (gameObject->GetSprite().getGlobalBounds().contains(pos))
 	{
@@ -28,6 +30,8 @@ void Button::Update(float deltaTime)
 	if (inBox)
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !mouseDown)
+			canClick = true;
+		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && mouseDown && canClick)
 		{
 			CallDelegate(click);
 			Clicked();
@@ -36,8 +40,11 @@ void Button::Update(float deltaTime)
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		mouseDown = true;
-	else
+	else 
+	{
 		mouseDown = false;
+		canClick = false;
+	}
 	
 }
 

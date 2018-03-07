@@ -3,7 +3,7 @@
 
 enum class Comp
 {
-	Animation, Button, DisplayObject
+	Animation, Button, DisplayObject, Move
 };
 
 class GameObject;
@@ -15,6 +15,7 @@ public:
 	virtual ~Component();
 	GameObject* gameObject;
 	Comp componentType;
+	bool enabled = true;
 
 	virtual void Update(float deltaTime) = 0;
 };

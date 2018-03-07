@@ -14,6 +14,9 @@ enum class Textures
 	Newspaper,
 	NewspaperHighlight,
 	ArrowDrawn,
+	SignOpen,
+	SignClosed,
+	Man,
 
 	Length
 };
@@ -40,7 +43,10 @@ class ResourceManager
 		"Textures/JournalOpen.png",
 		"Textures/Newspaper.png",
 		"Textures/NewspaperHighlight.png",
-		"Textures/ArrowDrawn.png"
+		"Textures/ArrowDrawn.png",
+		"Textures/SignOpen.png",
+		"Textures/SignClosed.png",
+		"Textures/Races/Human/Man.png"
 	};
 
 	const char* fontPaths[(int)Fonts::Length] = 

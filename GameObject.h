@@ -10,7 +10,7 @@ class Game;
 class GameObject : public Object
 {
 public:
-	GameObject(std::string _name, Textures const & textureName, sf::Vector2f position = sf::Vector2f(0, 0));
+	GameObject(std::string name, Textures const & textureName, sf::Vector2f position = sf::Vector2f(0, 0));
 
 	void Update(float deltaTime);
 
@@ -39,6 +39,18 @@ public:
 				return (T*)components[i].get();
 		}
 		return nullptr;
+	}
+
+	template<class T>
+	std::vector<T*> GetComponents(Comp componentType)
+	{
+		std::vector<T*> result;
+		for (size_t i = 0; i < components.size(); i++)
+		{
+			if (components[i].get()->componentType == componentType)
+				result.push_back((T*)components[i].get());
+		}
+		return result;
 	}
 
 protected:

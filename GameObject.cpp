@@ -2,9 +2,9 @@
 #include "Game.h"
 
 
-GameObject::GameObject(std::string _name, Textures const & textureName, sf::Vector2f position)
+GameObject::GameObject(std::string name, Textures const & textureName, sf::Vector2f position)
 {
-	name = _name;
+	this->name = name;
 	sf::Texture* tex = Game::resourceManager.RetrieveTexture(textureName);
 	SetSprite(tex);
 	SetPosition(position);

@@ -22,25 +22,25 @@ void DisplayObject::Init(Textures const openJournalTex, unsigned int const pageL
 	defaultTexture = Game::resourceManager.RetrieveTexture(defaultTex);
 	hoverTexture = Game::resourceManager.RetrieveTexture(hoverTex);
 
-	openedImage = ObjectManager::CreateObject("Open"+gameObject->name, openJournalTex);
+	openedImage = ObjectManager::CreateObject("Open"+gameObject->name, Scenes::UI, openJournalTex);
 	openedImage->SetLayer(10);
 	openedImage->SetActive(false);
 
-	displayTextLeft = ObjectManager::CreateText("TextLeft" + gameObject->name, Fonts::Hughs, notes[currentPage], sf::Vector2f(-360, 220));
+	displayTextLeft = ObjectManager::CreateText("TextLeft" + gameObject->name, Scenes::UI, Fonts::Hughs, notes[currentPage], sf::Vector2f(-360, 220));
 	displayTextLeft->SetSize(fontSize);
 	displayTextLeft->SetColor(sf::Color::Black);
 	displayTextLeft->SetParent(openedImage);
 	displayTextLeft->SetLayer(11);
 	displayTextLeft->SetActive(false);
 
-	displayTextRight = ObjectManager::CreateText("TextRight" + gameObject->name, Fonts::Hughs, notes[currentPage + 1], sf::Vector2f(0, 220));
+	displayTextRight = ObjectManager::CreateText("TextRight" + gameObject->name, Scenes::UI, Fonts::Hughs, notes[currentPage + 1], sf::Vector2f(0, 220));
 	displayTextRight->SetSize(fontSize);
 	displayTextRight->SetColor(sf::Color::Black);
 	displayTextRight->SetParent(openedImage);
 	displayTextRight->SetLayer(11);
 	displayTextRight->SetActive(false);
 
-	changePageLeft = ObjectManager::CreateObject("ChangePageLeft" + gameObject->name, Textures::ArrowDrawn, sf::Vector2f(-310, -190));
+	changePageLeft = ObjectManager::CreateObject("ChangePageLeft" + gameObject->name, Scenes::UI, Textures::ArrowDrawn, sf::Vector2f(-310, -190));
 	changePageLeft->SetScale(sf::Vector2f(-0.05f, 0.05f));
 	changePageLeft->SetParent(openedImage);
 	changePageLeft->SetLayer(12);
@@ -50,7 +50,7 @@ void DisplayObject::Init(Textures const openJournalTex, unsigned int const pageL
 	leftButton->pointerExit.push_back(std::bind(&DisplayObject::HoverOffLeft, this));
 	leftButton->click.push_back(std::bind(&DisplayObject::FlipLeft, this));
 
-	changePageRight = ObjectManager::CreateObject("ChangePageRight" + gameObject->name, Textures::ArrowDrawn, sf::Vector2f(310, -190));
+	changePageRight = ObjectManager::CreateObject("ChangePageRight" + gameObject->name, Scenes::UI, Textures::ArrowDrawn, sf::Vector2f(310, -190));
 	changePageRight->SetScale(sf::Vector2f(0.05f, 0.05f));
 	changePageRight->SetParent(openedImage);
 	changePageRight->SetLayer(12);
@@ -84,6 +84,8 @@ void DisplayObject::Update(float deltaTime)
 
 void DisplayObject::Clicked()
 {
+	if (gameObject->GetVisible() && Game::menuOpen)
+		return;
 	gameObject->SetVisible(!gameObject->GetVisible());
 	openedImage->SetActive(!gameObject->GetVisible());
 	displayTextLeft->SetActive(!gameObject->GetVisible());
@@ -91,10 +93,17 @@ void DisplayObject::Clicked()
 	changePageLeft->SetActive(!gameObject->GetVisible());
 	changePageRight->SetActive(!gameObject->GetVisible());
 	UpdatePage();
+
+	if (!gameObject->GetVisible())
+		Game::menuOpen = true;
+	else
+		Game::menuOpen = false;
 }
 
 void DisplayObject::PointerEnter()
 {
+	if (gameObject->GetVisible() && Game::menuOpen)
+		return;
 	gameObject->SetSprite(hoverTexture);
 }
 
