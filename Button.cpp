@@ -1,5 +1,4 @@
 #include "Button.h"
-#include "GameObject.h"
 #include "Game.h"
 
 void Button::Update(float deltaTime)
@@ -54,4 +53,21 @@ void Button::CallDelegate(std::vector<std::function<void()>> const& del)
 	{
 		call();
 	}
+}
+
+void Button::Clicked()
+{
+}
+
+void Button::PointerEnter()
+{
+	if (highlightTexture == nullptr || (gameObject->GetVisible() && Game::menuOpen))
+		return;
+	gameObject->SetSprite(highlightTexture);
+}
+
+void Button::PointerExit()
+{
+	if (highlightTexture != nullptr)
+		gameObject->SetSprite(originalTexture);
 }

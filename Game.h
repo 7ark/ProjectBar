@@ -7,7 +7,7 @@
 class GameObject;
 class Animation;
 
-enum class GameState { PreOpen, Open, Billing };
+enum class GameState { PreOpen, Open, WithCustomer, Billing };
 
 class Game
 {
@@ -41,7 +41,6 @@ private:
 
 	const sf::Vector2f doorPosition = sf::Vector2f(300, 300);
 
-	bool withCustomer = false;
 	std::vector<GameObject*> customersInBar;
 	GameObject* currentCustomer;
 

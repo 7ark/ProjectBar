@@ -10,12 +10,14 @@ class Game;
 class GameObject : public Object
 {
 public:
-	GameObject(std::string name, Textures const & textureName, sf::Vector2f position = sf::Vector2f(0, 0));
+	GameObject();
+	void Init(std::string name, Textures const & textureName, sf::Vector2f position = sf::Vector2f(0, 0));
 
 	void Update(float deltaTime);
 
 	//Getters
 	sf::Sprite GetSprite() { return sprite; }
+	sf::Texture* GetSpriteTexture() { return currentTexture; }
 
 	//Setters
 	void SetSprite(sf::Texture* texture, bool centered = true);
@@ -55,6 +57,7 @@ public:
 
 protected:
 	sf::Sprite sprite;
+	sf::Texture* currentTexture;
 
 	std::vector<std::unique_ptr<Component>> components;
 

@@ -4,11 +4,22 @@
 #include "Object.h"
 
 std::vector<std::unique_ptr<Object>> ObjectManager::objects;
+std::vector<Object*> ObjectManager::objectsInPool;
 
 GameObject * ObjectManager::CreateObject(std::string _name, Scenes view, Textures const & textureName, sf::Vector2f position)
 {
-	objects.push_back(std::make_unique<GameObject>(_name, textureName, position));
-	GameObject* result = static_cast<GameObject*>(objects.back().get());
+	GameObject* result;
+	if (objectsInPool.size() == 0)
+	{
+		objects.push_back(std::make_unique<GameObject>());
+		result = static_cast<GameObject*>(objects.back().get());
+	}
+	else
+	{
+		result = static_cast<GameObject*>(objectsInPool[0]);
+		objectsInPool.erase(objectsInPool.begin());
+	}
+	result->Init(_name, textureName, position);
 	result->SetScene(view);
 	UpdateLayerOrder();
 	return result;
@@ -21,11 +32,6 @@ Text * ObjectManager::CreateText(std::string name, Scenes view, Fonts const & fo
 	result->SetScene(view);
 	UpdateLayerOrder();
 	return result;
-}
-
-void ObjectManager::Destroy(const GameObject* obj)
-{
-	//std::remove_if(objects.begin(), objects.end(), [&obj](GameObject const& other) { return *obj == other; });
 }
 
 void ObjectManager::DrawObjects(sf::RenderTarget& target, Scenes view)

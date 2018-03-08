@@ -58,7 +58,7 @@ void Game::Setup(Scenes scene)
 	case Scenes::UI:
 	{
 		#pragma region UI
-		GameObject* journal = ObjectManager::CreateObject("Journal", scene, Textures::Journal, sf::Vector2f(-500, -300));
+		GameObject* journal = ObjectManager::CreateObject("Journal", scene, Textures::Journal, sf::Vector2f(-550, -300));
 		journal->SetScale(sf::Vector2f(0.2f, 0.2f));
 		char* journalNotes[4] =
 		{
@@ -67,9 +67,11 @@ void Game::Setup(Scenes scene)
 			"Something else: I'm just trying to fill\npages at this point to be honest.\n\nDrinks They Enjoy: Who?? \nThis isn't very specific\n\nPoisonous: Memes",
 			"Manpat: Best god damn #other-dev dude.\n\nDrinks They Enjoy: sarsaparilla and \norange juice\n\nPoisonous: Everything humans die from"
 		};
-		journal->AddComponent<DisplayObject>(Comp::DisplayObject)->Init(Textures::JournalOpen, 4, journalNotes, Textures::Journal, Textures::JournalHighlight);
+		DisplayObject* journalDisplay = journal->AddComponent<DisplayObject>(Comp::DisplayObject);
+		journalDisplay->Init(Textures::JournalOpen, 4, journalNotes);
+		journalDisplay->SetHighlightTexture(Textures::Journal, Textures::JournalHighlight);
 
-		GameObject* newspaper = ObjectManager::CreateObject("Newspaper", scene, Textures::Newspaper, sf::Vector2f(-300, -300));
+		GameObject* newspaper = ObjectManager::CreateObject("Newspaper", scene, Textures::Newspaper, sf::Vector2f(-400, -300));
 		newspaper->SetScale(sf::Vector2f(0.2f, 0.2f));
 		char* newsNotes[4] =
 		{
@@ -78,7 +80,9 @@ void Game::Setup(Scenes scene)
 			"Bob's Nats Be Gone\n\nCan someone help Bob? He's gone\nand lost his nats again.\n\n\nWoman Found Not Drinking Water\n\nEarly tuesday morning a woman was found\nwithout being able to drink water.\nFind out how she almost lived today, at 1am.\n\n\nCat Stuck in Me\n\nOh god someone please help!",
 			"New Show\n\nThere's a new show in town, but nobody\nknows what it is. 0/10\n\n\nInternet Cancelled\n\nIt was decided by the internet gods\nthat on 3/4/18 the internet would be\ncancelled.\n\n\nIdk Man I Just Work Here\n\nWell I gotta type something for an article?\nHell if I know what to type."
 		};
-		newspaper->AddComponent<DisplayObject>(Comp::DisplayObject)->Init(Textures::JournalOpen, 4, newsNotes, Textures::Newspaper, Textures::NewspaperHighlight);
+		DisplayObject* newspaperDisplay = newspaper->AddComponent<DisplayObject>(Comp::DisplayObject);
+		newspaperDisplay->Init(Textures::JournalOpen, 4, newsNotes);
+		newspaperDisplay->SetHighlightTexture(Textures::Newspaper, Textures::NewspaperHighlight);
 
 		sign = ObjectManager::CreateObject("OpenSign", scene, Textures::SignClosed, sf::Vector2f(450, 330));
 		sign->SetScale(sf::Vector2f(0.3f, 0.3f));
@@ -102,7 +106,9 @@ void Game::Setup(Scenes scene)
 
 		GameObject* serveDrinkButton = ObjectManager::CreateObject("ServeDrinkButton", scene, Textures::EmptySign, sf::Vector2f(-100, -300));
 		serveDrinkButton->SetScale(sf::Vector2f(0.2f, 0.2f));
-		serveDrinkButton->AddComponent<Button>(Comp::Button)->click.push_back(std::bind(&Game::ServeDrink, this));
+		Button* serveButton = serveDrinkButton->AddComponent<Button>(Comp::Button);
+		serveButton->click.push_back(std::bind(&Game::ServeDrink, this));
+		serveButton->SetHighlightTexture(Textures::EmptySign, Textures::SignOpen);
 #pragma endregion
 	}
 		break;
@@ -112,8 +118,12 @@ void Game::Setup(Scenes scene)
 
 void Game::ServeDrink()
 {
-	if(currentCustomer != nullptr)
-		currentCustomer->SetActive(false);
+	if (currentCustomer != nullptr) 
+	{
+		currentCustomer->Destroy();
+		currentCustomer = nullptr;
+		currentGameState = GameState::Open;
+	}
 }
 
 void Game::Open()
@@ -160,15 +170,15 @@ void Game::Run(sf::RenderWindow& window,sf::View& view, sf::View& viewUI)
 		case GameState::PreOpen:
 			break;
 		case GameState::Open:
-			if (!withCustomer)
+			customerTimer += deltaTime;
+			if (customerTimer >= newCustomerFrequency)
 			{
-				customerTimer += deltaTime;
-				if (customerTimer >= newCustomerFrequency)
-				{
-					CustomerEnter();
-					withCustomer = true;
-				}
+				CustomerEnter();
+				currentGameState = GameState::WithCustomer;
 			}
+			break;
+		case GameState::WithCustomer:
+			customerTimer = 0;
 			break;
 		case GameState::Billing:
 			break;

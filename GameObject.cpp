@@ -2,8 +2,14 @@
 #include "Game.h"
 
 
-GameObject::GameObject(std::string name, Textures const & textureName, sf::Vector2f position)
+GameObject::GameObject()
 {
+	
+}
+
+void GameObject::Init(std::string name, Textures const & textureName, sf::Vector2f position)
+{
+	destroyed = false;
 	this->name = name;
 	sf::Texture* tex = Game::resourceManager.RetrieveTexture(textureName);
 	SetSprite(tex);
@@ -23,6 +29,7 @@ void GameObject::Update(float deltaTime)
 }
 void GameObject::SetSprite(sf::Texture * texture, bool centered)
 {
+	currentTexture = texture;
 	sprite.setTexture(*texture);
 	if (centered) 
 	{

@@ -10,7 +10,7 @@ DisplayObject::DisplayObject()
 	
 }
 
-void DisplayObject::Init(Textures const openJournalTex, unsigned int const pageLength, char * const note[], Textures defaultTex, Textures hoverTex)
+void DisplayObject::Init(Textures const openJournalTex, unsigned int const pageLength, char * const note[])
 {
 	pageSize = pageLength;
 	notes.clear();
@@ -18,9 +18,6 @@ void DisplayObject::Init(Textures const openJournalTex, unsigned int const pageL
 	{
 		notes.push_back(note[i]);
 	}
-
-	defaultTexture = Game::resourceManager.RetrieveTexture(defaultTex);
-	hoverTexture = Game::resourceManager.RetrieveTexture(hoverTex);
 
 	openedImage = ObjectManager::CreateObject("Open"+gameObject->name, Scenes::UI, openJournalTex);
 	openedImage->SetLayer(10);
@@ -98,18 +95,6 @@ void DisplayObject::Clicked()
 		Game::menuOpen = true;
 	else
 		Game::menuOpen = false;
-}
-
-void DisplayObject::PointerEnter()
-{
-	if (gameObject->GetVisible() && Game::menuOpen)
-		return;
-	gameObject->SetSprite(hoverTexture);
-}
-
-void DisplayObject::PointerExit()
-{
-	gameObject->SetSprite(defaultTexture);
 }
 
 void DisplayObject::UpdatePage()

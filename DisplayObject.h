@@ -10,13 +10,10 @@ public:
 	DisplayObject();
 	~DisplayObject();
 
-	void Init(Textures const openImageTex, unsigned int const pageLength, char * const note[], Textures defaultTex, Textures hoverTex);
+	void Init(Textures const openImageTex, unsigned int const pageLength, char * const note[]);
 	void Update(float deltaTime);
 
 private:
-	sf::Texture* hoverTexture;
-	sf::Texture* defaultTexture;
-
 	GameObject* openedImage;
 	Text* displayTextLeft;
 	Text* displayTextRight; 
@@ -24,8 +21,6 @@ private:
 	GameObject* changePageRight;
 
 	void Clicked();
-	void PointerEnter();
-	void PointerExit();
 	void UpdatePage();
 	void FlipPage(bool forward);
 	void HoverButton(GameObject* butt, bool hovering);

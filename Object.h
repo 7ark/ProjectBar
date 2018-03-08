@@ -32,10 +32,11 @@ public:
 
 
 	//Setters
-	void SetActive(bool active) { enabled = active; }
+	void SetActive(bool active) { if(!destroyed) enabled = active; }
 	void SetVisible(bool vis) { visible = vis; }
 	void SetLayer(int l) { layer = l; ObjectManager::UpdateLayerOrder(); }
 	void SetScene(Scenes s) { scene = s; }
+	void Destroy();
 
 	//Getters
 	bool GetActive() { return enabled; }
@@ -43,6 +44,7 @@ public:
 	int GetUniqueID() { return id; }
 	int GetLayer() { return layer; }
 	Scenes GetScene() { return scene; }
+	bool IsDestroyed() { return destroyed; }
 
 
 	~Object();
@@ -52,6 +54,7 @@ protected:
 
 	bool enabled = true;
 	bool visible = true;
+	bool destroyed = false;
 
 	static int globalId;
 	int id = 0;
