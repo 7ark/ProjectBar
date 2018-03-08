@@ -57,6 +57,7 @@ void Game::Setup(Scenes scene)
 	break;
 	case Scenes::UI:
 	{
+		#pragma region UI
 		GameObject* journal = ObjectManager::CreateObject("Journal", scene, Textures::Journal, sf::Vector2f(-500, -300));
 		journal->SetScale(sf::Vector2f(0.2f, 0.2f));
 		char* journalNotes[4] =
@@ -98,10 +99,21 @@ void Game::Setup(Scenes scene)
 			Key(0,Textures::SignClosed)
 		};
 		signClosed->SetKeys(closedKeys, 2);
+
+		GameObject* serveDrinkButton = ObjectManager::CreateObject("ServeDrinkButton", scene, Textures::EmptySign, sf::Vector2f(-100, -300));
+		serveDrinkButton->SetScale(sf::Vector2f(0.2f, 0.2f));
+		serveDrinkButton->AddComponent<Button>(Comp::Button)->click.push_back(std::bind(&Game::ServeDrink, this));
+#pragma endregion
 	}
 		break;
 	}
 	
+}
+
+void Game::ServeDrink()
+{
+	if(currentCustomer != nullptr)
+		currentCustomer->SetActive(false);
 }
 
 void Game::Open()
@@ -119,6 +131,8 @@ void Game::CustomerEnter()
 	newCustomer->name = "Customer #"+newCustomer->GetUniqueID(); //We'll give them proper names... once they've earned them!
 	newCustomer->SetScale(sf::Vector2f(0.2f, 0.2f));
 	newCustomer->AddComponent<Move>(Comp::Move)->LerpTo(counter->GetPosition()+sf::Vector2f(0,150), sf::Vector2f(0.3f, 0.3f), 3);
+
+	currentCustomer = newCustomer;
 }
 
 void Game::Run(sf::RenderWindow& window,sf::View& view, sf::View& viewUI)

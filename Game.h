@@ -33,6 +33,7 @@ private:
 	void Setup(Scenes scene);
 
 	void Open();
+	void ServeDrink();
 
 	void CustomerEnter();
 

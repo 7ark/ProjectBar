@@ -3,6 +3,7 @@
 #include <iostream>
 #include <SFML\Graphics.hpp>
 #include "GameSettings.h"
+#include "HelperFunctions.h"
 
 enum class Scenes { SceneAll, SceneRight, SceneLeft, UI, Length };
 

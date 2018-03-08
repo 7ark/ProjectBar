@@ -15,10 +15,6 @@ public:
 	void Update(float deltaTime);
 
 private:
-	sf::Vector2f Lerp(sf::Vector2f one, sf::Vector2f two, float delta)
-	{
-		return one + delta * (two - one);
-	}
 
 	sf::Vector2f originalPosition;
 	sf::Vector2f targetPosition;

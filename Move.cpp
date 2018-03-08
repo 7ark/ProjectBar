@@ -38,9 +38,9 @@ void Move::Update(float deltaTime)
 		timeProgressed += deltaTime;
 		if (timeProgressed > timeToMove) timeProgressed = timeToMove;
 		float val = (timeProgressed / timeToMove);
-		gameObject->SetPosition(Lerp(originalPosition, targetPosition, val));
+		gameObject->SetPosition(HelperFunctions::Lerp(originalPosition, targetPosition, val));
 		if (scaling)
-			gameObject->SetScale(Lerp(originalScale, targetScale, val));
+			gameObject->SetScale(HelperFunctions::Lerp(originalScale, targetScale, val));
 
 		if (val >= 1)
 		{

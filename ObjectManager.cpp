@@ -25,7 +25,7 @@ Text * ObjectManager::CreateText(std::string name, Scenes view, Fonts const & fo
 
 void ObjectManager::Destroy(const GameObject* obj)
 {
-
+	//std::remove_if(objects.begin(), objects.end(), [&obj](GameObject const& other) { return *obj == other; });
 }
 
 void ObjectManager::DrawObjects(sf::RenderTarget& target, Scenes view)

@@ -16,6 +16,7 @@ enum class Textures
 	ArrowDrawn,
 	SignOpen,
 	SignClosed,
+	EmptySign,
 	Man,
 
 	Length
@@ -46,6 +47,7 @@ class ResourceManager
 		"Textures/ArrowDrawn.png",
 		"Textures/SignOpen.png",
 		"Textures/SignClosed.png",
+		"Textures/Sign.png",
 		"Textures/Races/Human/Man.png"
 	};
 
