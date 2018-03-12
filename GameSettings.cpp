@@ -1,8 +1,14 @@
 #include "GameSettings.h"
 
-int GameSettings::width;
-int GameSettings::height;
-int GameSettings::halfWidth;
-int GameSettings::halfHeight;
+int GameSettings::resolutionWidth;
+int GameSettings::resolutionHeight;
+int GameSettings::windowWidth;
+int GameSettings::windowHeight;
+int GameSettings::uiReferenceWidth;
+int GameSettings::uiReferenceHeight;
+int GameSettings::uiReferenceWidthHalf;
+int GameSettings::uiReferenceHeightHalf;
+int GameSettings::resolutionWidthHalf;
+int GameSettings::resolutionHeightHalf;
 
-const bool GameSettings::DEBUG = true;
+bool GameSettings::DEBUG = true;

@@ -29,25 +29,29 @@ Object::Object()
 
 void Object::Destroy()
 {
+	DeleteObject();
 	destroyed = true;
 	enabled = true;
 	visible = true;
-	transform.setPosition(sf::Vector2f(0, 0));
-	transform.setScale(sf::Vector2f(1, 1));
-	transform.setRotation(0);
+	transform = sf::Transformable();
 	ObjectManager::objectsInPool.push_back(this);
 }
 
-Object::~Object()
+void Object::DeleteObject()
 {
 	for (int i = 0; i < children.size(); i++)
 	{
 		children[i]->parent = nullptr;
 	}
-	if (parent != nullptr) 
+	if (parent != nullptr)
 	{
 		parent->children.erase(
-			std::remove(parent->children.begin(), parent->children.end(), this), 
+			std::remove(parent->children.begin(), parent->children.end(), this),
 			parent->children.end());
 	}
+}
+
+Object::~Object()
+{
+	DeleteObject();
 }

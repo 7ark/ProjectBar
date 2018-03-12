@@ -15,16 +15,17 @@ public:
 	static ResourceManager resourceManager;
 	static bool menuOpen;
 	static GameState currentGameState;
+	static std::map<Drinks, sf::Color> DrinkColors;
 
 	Game();
 	~Game();
 
-	void Run(sf::RenderWindow& window, sf::View& view, sf::View& viewUI);
+	void Run(sf::RenderWindow& window, sf::View& view, sf::View& viewUI, sf::View& viewBev);
 	void CheckEvents(sf::RenderWindow& window);
 
 	void Update(float deltaTime);
 
-	void Draw(sf::RenderTarget& target, sf::View& view, sf::View& viewUI);
+	void Draw(sf::RenderTarget& target, sf::View& view, sf::View& viewUI, sf::View& viewBev);
 
 	static sf::RenderWindow* window;
 
@@ -34,9 +35,13 @@ private:
 
 	void Open();
 	void ServeDrink();
+	void SetNewGlass();
+	void CreateLiquidAsset();
 
 	void CustomerEnter();
 
+	void DestroyCurrentGlass();
+	void DestroyCurrentLiquid();
 
 
 	const sf::Vector2f doorPosition = sf::Vector2f(300, 300);
@@ -48,6 +53,8 @@ private:
 	GameObject* counter;
 	GameObject* bartender;
 	GameObject* sign;
+	GameObject* currentGlass;
+	GameObject* currentLiquid;
 	Animation* signOpen;
 	Animation* signClosed;
 };

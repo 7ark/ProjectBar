@@ -13,6 +13,14 @@ bool Game::menuOpen = false;
 sf::RenderWindow* Game::window;
 GameState Game::currentGameState = GameState::PreOpen;
 
+std::map<Drinks, sf::Color> Game::DrinkColors =
+{
+	{ Drinks::Water, sf::Color(220,220,220,127) },
+	{ Drinks::Beer, sf::Color::Yellow },
+	{ Drinks::Arsenic, sf::Color(200,200,255) },
+	{ Drinks::Cyanide, sf::Color(255,255,255) },
+};
+
 Game::Game()
 {
 	resourceManager.Init();
@@ -36,11 +44,15 @@ void Game::Setup(Scenes scene)
 	{
 		GameObject* background = ObjectManager::CreateObject("BarBackgroundLeft", scene, Textures::BarBackground);
 		background->SetLayer(-20);
-		background->Scale(sf::Vector2f(4, 4));
+		background->Scale(sf::Vector2f(4, 4.5f));
 
-		counter = ObjectManager::CreateObject("CounterLeft", scene, Textures::BarCounter, sf::Vector2f(100, -400));
+		counter = ObjectManager::CreateObject("CounterLeft", scene, Textures::BarCounter, sf::Vector2f(100, -500));
 		counter->SetLayer(5);
-		counter->SetScale(sf::Vector2f(1.0f, 1.0f));
+		counter->SetScale(sf::Vector2f(1.3f, 1.3f));
+
+		GameObject* tapper = ObjectManager::CreateObject("Tapper", scene, Textures::Tapper, sf::Vector2f(500, -150));
+		tapper->SetLayer(7);
+	
 	}
 		break;
 	case Scenes::SceneLeft:
@@ -50,16 +62,16 @@ void Game::Setup(Scenes scene)
 	break;
 	case Scenes::SceneRight:
 	{
-		bartender = ObjectManager::CreateObject("Bartender", scene, Textures::Bartender, sf::Vector2f(100, -350));
-		bartender->SetScale(sf::Vector2f(1.5f, 1.5f));
+		bartender = ObjectManager::CreateObject("Bartender", scene, Textures::Bartender, sf::Vector2f(100, -450));
+		bartender->SetScale(sf::Vector2f(2.0f, 2.0f));
 		bartender->SetLayer(10);
 	}
 	break;
 	case Scenes::UI:
 	{
 		#pragma region UI
-		GameObject* journal = ObjectManager::CreateObject("Journal", scene, Textures::Journal, sf::Vector2f(-550, -300));
-		journal->SetScale(sf::Vector2f(0.2f, 0.2f));
+		GameObject* journal = ObjectManager::CreateObject("Journal", scene, Textures::Journal, sf::Vector2f(-850, -400));
+		journal->SetScale(sf::Vector2f(0.3f, 0.3f));
 		char* journalNotes[4] =
 		{
 			"Humans: Weak creatures that love\nto kill shit\n\nDrinks They Enjoy: Any kind of beer\n\nPoisonous: Acid",
@@ -71,8 +83,8 @@ void Game::Setup(Scenes scene)
 		journalDisplay->Init(Textures::JournalOpen, 4, journalNotes);
 		journalDisplay->SetHighlightTexture(Textures::Journal, Textures::JournalHighlight);
 
-		GameObject* newspaper = ObjectManager::CreateObject("Newspaper", scene, Textures::Newspaper, sf::Vector2f(-400, -300));
-		newspaper->SetScale(sf::Vector2f(0.2f, 0.2f));
+		GameObject* newspaper = ObjectManager::CreateObject("Newspaper", scene, Textures::Newspaper, sf::Vector2f(-600, -400));
+		newspaper->SetScale(sf::Vector2f(0.3f, 0.3f));
 		char* newsNotes[4] =
 		{
 			"BREAKING NEWS\n\nPrime Minister Bob shot by unknown\nassailant, status is unknown at this time.\n\n\nMan Found Drinking Water\n\nLate tuesday evening a man was found\ndrinking water. Find out how he almost\ndied tonight, at 11pm.\n\n\nCat Stuck in Tree\n\nThere's a cat stuck in a tree. He's still\nthere. Can someone please help us?",
@@ -84,8 +96,8 @@ void Game::Setup(Scenes scene)
 		newspaperDisplay->Init(Textures::JournalOpen, 4, newsNotes);
 		newspaperDisplay->SetHighlightTexture(Textures::Newspaper, Textures::NewspaperHighlight);
 
-		sign = ObjectManager::CreateObject("OpenSign", scene, Textures::SignClosed, sf::Vector2f(450, 330));
-		sign->SetScale(sf::Vector2f(0.3f, 0.3f));
+		sign = ObjectManager::CreateObject("OpenSign", scene, Textures::SignClosed, sf::Vector2f(650, 500));
+		sign->SetScale(sf::Vector2f(0.5f, 0.5f));
 		sign->AddComponent<Button>(Comp::Button)->click.push_back(std::bind(&Game::Open, this));
 
 		signOpen = sign->AddComponent<Animation>(Comp::Animation);
@@ -104,11 +116,19 @@ void Game::Setup(Scenes scene)
 		};
 		signClosed->SetKeys(closedKeys, 2);
 
-		GameObject* serveDrinkButton = ObjectManager::CreateObject("ServeDrinkButton", scene, Textures::EmptySign, sf::Vector2f(-100, -300));
-		serveDrinkButton->SetScale(sf::Vector2f(0.2f, 0.2f));
+		GameObject* serveDrinkButton = ObjectManager::CreateObject("ServeDrinkButton", scene, Textures::EmptySign, sf::Vector2f(-300,-400));
+		serveDrinkButton->SetScale(sf::Vector2f(0.3f, 0.3f));
 		Button* serveButton = serveDrinkButton->AddComponent<Button>(Comp::Button);
 		serveButton->click.push_back(std::bind(&Game::ServeDrink, this));
 		serveButton->SetHighlightTexture(Textures::EmptySign, Textures::SignOpen);
+
+		GameObject* addGlassButton = ObjectManager::CreateObject("AddGlassButton", scene, Textures::GlassCup, sf::Vector2f(80, -480));
+		addGlassButton->SetScale(sf::Vector2f(0.05f, 0.05f));
+		addGlassButton->SetRotation(180);
+		addGlassButton->AddComponent<Button>(Comp::Button)->click.push_back(std::bind(&Game::SetNewGlass, this));
+
+		GameObject* frame = ObjectManager::CreateObject("Frame", scene, Textures::Frame, sf::Vector2f(0, 0));
+		frame->SetScale(sf::Vector2f(0.2f, 0.52f));
 #pragma endregion
 	}
 		break;
@@ -126,6 +146,32 @@ void Game::ServeDrink()
 	}
 }
 
+void Game::SetNewGlass()
+{
+	DestroyCurrentGlass();
+	DestroyCurrentLiquid();
+	currentGlass = ObjectManager::CreateObject("CurrentGlassCup", Scenes::SceneAll, Textures::GlassCup, sf::Vector2f(570, -500));
+	Move* glassMove = currentGlass->AddComponent<Move>(Comp::Move);
+	currentGlass->SetLayer(8);
+	currentGlass->SetScale(sf::Vector2f(0.05f, 0.05f));
+	currentGlass->SetRotation(180);
+	glassMove->LerpTo(sf::Vector2f(560, -200), 0, 0.5f, [this]() 
+	{ 
+		currentGlass->GetComponent<Move>(Comp::Move)->LerpTo(sf::Vector2f(470, -280), 0.3f, std::bind(&Game::CreateLiquidAsset, this)); 
+	});
+}
+
+void Game::CreateLiquidAsset()
+{
+	DestroyCurrentLiquid();
+	currentLiquid = ObjectManager::CreateObject("Liquid", Scenes::SceneAll, Textures::Liquid);
+	currentLiquid->SetLayer(10);
+	currentLiquid->SetParent(currentGlass);
+	currentLiquid->SetColor(DrinkColors[(Drinks)(rand()%(int)Drinks::Length)]);
+	currentLiquid->SetFillMode(FillMode::BottomToTop);
+	currentLiquid->SetFillAmount(0);
+}
+
 void Game::Open()
 {
 	if (currentGameState == GameState::PreOpen) 
@@ -139,13 +185,31 @@ void Game::CustomerEnter()
 {
 	GameObject* newCustomer = ObjectManager::CreateObject("Customer", Scenes::SceneAll, Textures::Man, doorPosition);
 	newCustomer->name = "Customer #"+newCustomer->GetUniqueID(); //We'll give them proper names... once they've earned them!
-	newCustomer->SetScale(sf::Vector2f(0.2f, 0.2f));
-	newCustomer->AddComponent<Move>(Comp::Move)->LerpTo(counter->GetPosition()+sf::Vector2f(0,150), sf::Vector2f(0.3f, 0.3f), 3);
+	newCustomer->SetScale(sf::Vector2f(0.4f, 0.4f));
+	newCustomer->AddComponent<Move>(Comp::Move)->LerpTo(counter->GetPosition()+sf::Vector2f(0,150), sf::Vector2f(0.5f, 0.5f), 3);
 
 	currentCustomer = newCustomer;
 }
 
-void Game::Run(sf::RenderWindow& window,sf::View& view, sf::View& viewUI)
+void Game::DestroyCurrentGlass()
+{
+	if (currentGlass != nullptr && !currentGlass->IsDestroyed())
+	{
+		currentGlass->Destroy();
+		currentGlass = nullptr;
+	}
+}
+
+void Game::DestroyCurrentLiquid()
+{
+	if (currentLiquid != nullptr && !currentLiquid->IsDestroyed())
+	{
+		currentLiquid->Destroy();
+		currentLiquid = nullptr;
+	}
+}
+
+void Game::Run(sf::RenderWindow& window,sf::View& view, sf::View& viewUI, sf::View& viewBev)
 {
 	Game::window = &window;
 	sf::Clock clock; 
@@ -164,6 +228,8 @@ void Game::Run(sf::RenderWindow& window,sf::View& view, sf::View& viewUI)
 		float deltaTime = clock.restart().asSeconds();
 		Update(deltaTime);
 
+		if (currentLiquid != nullptr)
+			currentLiquid->ChangeFillAmount(deltaTime);
 		//Game Update
 		switch (currentGameState)
 		{
@@ -187,7 +253,7 @@ void Game::Run(sf::RenderWindow& window,sf::View& view, sf::View& viewUI)
 		}
 
 		//Draw all of our everything
-		Draw(window, view, viewUI);
+		Draw(window, view, viewUI, viewBev);
 		window.display();
 	}
 }
@@ -202,6 +268,14 @@ void Game::CheckEvents(sf::RenderWindow& window)
 		case sf::Event::Closed:
 			window.close();
 			break;
+		case sf::Event::KeyReleased:
+			switch (event.key.code)
+			{
+
+			default:
+				break;
+			}
+			break;
 		default:
 			break;
 		}
@@ -214,12 +288,12 @@ void Game::Update(float deltaTime)
 	ObjectManager::UpdateObjects(deltaTime);
 }
 
-void Game::Draw(sf::RenderTarget & target, sf::View& view, sf::View& viewUI)
+void Game::Draw(sf::RenderTarget & target, sf::View& view, sf::View& viewUI, sf::View& viewBev)
 {
 	target.clear(sf::Color::Cyan);
 
 	sf::View viewLeft = view;
-	viewLeft.setCenter(sf::Vector2f(100, 200));
+	viewLeft.setCenter(sf::Vector2f(140, 200));
 	viewLeft.setViewport(sf::FloatRect(0, 0, 0.5f, 1));
 	viewLeft.zoom(0.8f);
 
@@ -227,11 +301,18 @@ void Game::Draw(sf::RenderTarget & target, sf::View& view, sf::View& viewUI)
 	viewRight.setViewport(sf::FloatRect(0.5f, 0, 0.5f, 1));
 	viewRight.zoom(1.4f);
 
+	sf::View viewBeverages = viewBev;
+	viewBeverages.setCenter(sf::Vector2f(480,0));
+	viewBeverages.setViewport(sf::FloatRect(0.425f, 0, 0.15f, 1));
+
 	target.setView(viewLeft);
 	ObjectManager::DrawObjects(target, Scenes::SceneLeft);
 
 	target.setView(viewRight);
 	ObjectManager::DrawObjects(target, Scenes::SceneRight);
+
+	target.setView(viewBeverages);
+	ObjectManager::DrawObjects(target, Scenes::Beverages);
 
 	target.setView(viewUI);
 	ObjectManager::DrawObjects(target, Scenes::UI);

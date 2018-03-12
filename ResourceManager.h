@@ -17,6 +17,10 @@ enum class Textures
 	SignOpen,
 	SignClosed,
 	EmptySign,
+	Tapper,
+	GlassCup,
+	Liquid,
+	Frame,
 	Man,
 
 	Length
@@ -48,6 +52,10 @@ class ResourceManager
 		"Textures/SignOpen.png",
 		"Textures/SignClosed.png",
 		"Textures/Sign.png",
+		"Textures/Tapper.png",
+		"Textures/GlassCup.png",
+		"Textures/GlassCupLiquid.png",
+		"Textures/BevFrame.png",
 		"Textures/Races/Human/Man.png"
 	};
 

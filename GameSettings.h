@@ -3,10 +3,19 @@
 class GameSettings
 {
 public:
-	static int width;
-	static int height;
-	static int halfWidth;
-	static int halfHeight;
+	static int resolutionWidth;
+	static int resolutionHeight;
 
-	const static bool DEBUG;
+	static int windowWidth;
+	static int windowHeight;
+
+	static int uiReferenceWidth;
+	static int uiReferenceHeight;
+	static int uiReferenceWidthHalf;
+	static int uiReferenceHeightHalf;
+
+	static int resolutionWidthHalf;
+	static int resolutionHeightHalf;
+
+	static bool DEBUG;
 };

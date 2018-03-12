@@ -27,7 +27,7 @@ public:
 	void Scale(sf::Vector2f scale) { transform.scale(scale); }
 
 	void SetRotation(float angle) { transform.setRotation(angle); }
-	float GetRotation() { transform.getRotation(); }
+	float GetRotation() { return transform.getRotation(); }
 	void Rotate(float angle) { transform.rotate(angle); }
 
 
@@ -36,7 +36,8 @@ public:
 	void SetVisible(bool vis) { visible = vis; }
 	void SetLayer(int l) { layer = l; ObjectManager::UpdateLayerOrder(); }
 	void SetScene(Scenes s) { scene = s; }
-	void Destroy();
+	virtual void Destroy();
+	void DeleteObject();
 
 	//Getters
 	bool GetActive() { return enabled; }
