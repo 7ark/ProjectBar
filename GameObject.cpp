@@ -36,13 +36,13 @@ void GameObject::Destroy()
 	components.clear();
 	sprite = sf::Sprite();
 	fillMode = FillMode::None;
-	currentTexture = nullptr;
+	material = Material();
 	currentFillAmount = 1;
 	Object::Destroy();
 }
 void GameObject::SetSprite(sf::Texture * texture, bool centered)
 {
-	currentTexture = texture;
+	material.SetTexture(texture);
 	sprite.setTexture(*texture);
 	if (centered) 
 	{
@@ -54,10 +54,10 @@ void GameObject::SetSprite(sf::Texture * texture, bool centered)
 
 void GameObject::SetFillAmount(float fillAmount)
 {
-	if (currentTexture == nullptr) return;
+	if (material.GetTexture() == nullptr) return;
 	currentFillAmount = HelperFunctions::Clamp01(fillAmount);
-	unsigned int width = currentTexture->getSize().x;
-	unsigned int height = currentTexture->getSize().y;
+	unsigned int width = material.GetTexture()->getSize().x;
+	unsigned int height = material.GetTexture()->getSize().y;
 	unsigned int widthFilled = width*fillAmount;
 	unsigned int heightFilled = height*fillAmount;
 
@@ -81,5 +81,41 @@ void GameObject::SetFillAmount(float fillAmount)
 	default:
 		break;
 	}
+}
+
+void GameObject::OnDraw(sf::RenderTarget & target, sf::Transformable & transform)
+{
+	float xScale = transform.getScale().x;
+	float yScale = transform.getScale().y;
+	float xPosition = (fillMode == FillMode::RightToLeft ? (material.GetTexture()->getSize().x * xScale) *(1 - currentFillAmount) : 0);
+	float yPosition = (fillMode == FillMode::BottomToTop ? (material.GetTexture()->getSize().y * yScale) *(1 - currentFillAmount) : 0);
+
+	xPosition += transform.getPosition().x;
+	yPosition += transform.getPosition().y;
+
+	if (scene == Scenes::UI)
+	{
+		float xRatio = xPosition / GameSettings::uiReferenceWidthHalf;
+		float yRatio = yPosition / GameSettings::uiReferenceHeightHalf;
+		float xRatioCorrect = xPosition / GameSettings::resolutionWidthHalf;
+		float yRatioCorrect = yPosition / GameSettings::resolutionHeightHalf;
+		xRatio = xRatio - xRatioCorrect;
+		yRatio = yRatio - yRatioCorrect;
+
+		xPosition += GameSettings::resolutionWidthHalf*xRatio;
+		yPosition += GameSettings::resolutionHeightHalf*yRatio;
+		xScale *= xRatio + 1;
+		yScale *= xRatio + 1;
+	}
+
+
+	sprite.setPosition(sf::Vector2f(xPosition, yPosition));
+	sprite.setScale(sf::Vector2f(xScale, yScale));
+	sprite.setRotation(transform.getRotation());
+
+	material.BindShader();
+
+	if (enabled && visible)
+		target.draw(sprite, material.GetShader());
 }
 

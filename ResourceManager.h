@@ -21,6 +21,8 @@ enum class Textures
 	GlassCup,
 	Liquid,
 	Frame,
+	TapperButtonUp,
+	TapperButtonDown,
 	Man,
 
 	Length
@@ -30,6 +32,14 @@ enum class Fonts
 {
 	Null,
 	Hughs,
+
+	Length
+};
+
+enum class Shaders
+{
+	Null,
+	Outline,
 
 	Length
 };
@@ -56,6 +66,8 @@ class ResourceManager
 		"Textures/GlassCup.png",
 		"Textures/GlassCupLiquid.png",
 		"Textures/BevFrame.png",
+		"Textures/TapperButtonUp.png",
+		"Textures/TapperButtonDown.png",
 		"Textures/Races/Human/Man.png"
 	};
 
@@ -64,18 +76,26 @@ class ResourceManager
 		"Null",
 		"Fonts/Hughs.otf"
 	};
+
+	const char* shaderPaths[(int)Shaders::Length] =
+	{
+		"Null",
+		"Shaders/Outline.frag"
+	};
 #pragma endregion
 
 public:
 	void Init();
 	sf::Texture* RetrieveTexture(Textures tex);
 	sf::Font* RetrieveFont(Fonts font);
-	void Destroy();
+	sf::Shader* RetrieveShader(Shaders shader, sf::Shader::Type shaderType);
 
 private:
 	std::unordered_map<Textures, sf::Texture*> textures;
 	std::unordered_map<Fonts, sf::Font*> fonts;
+	std::unordered_map<Shaders, sf::Shader*> shaders;
 
 	sf::Texture* CreateTexture(std::string const& textureFile, Textures tex);
 	sf::Font* CreateFont(std::string const& fontFile, Fonts font);
+	sf::Shader* CreateShader(std::string const& shaderFile, sf::Shader::Type shaderType, Shaders shader);
 };

@@ -32,7 +32,6 @@ Game::Game()
 
 Game::~Game()
 {
-	resourceManager.Destroy();
 }
 
 void Game::Setup(Scenes scene)

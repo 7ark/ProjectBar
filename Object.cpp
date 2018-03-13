@@ -2,7 +2,7 @@
 
 int Object::globalId = 0;
 
-void Object::draw(sf::RenderTarget& target)
+void Object::Draw(sf::RenderTarget& target)
 {
 	if (destroyed) return;
 	sf::Transformable combinedTransform = transform;
@@ -12,7 +12,7 @@ void Object::draw(sf::RenderTarget& target)
 		combinedTransform.setPosition(transform.getPosition() + parent->transform.getPosition());
 		combinedTransform.setRotation(transform.getRotation() + parent->transform.getRotation());
 	}
-	onDraw(target, combinedTransform);
+	OnDraw(target, combinedTransform);
 }
 
 void Object::SetParent(Object* obj)

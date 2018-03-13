@@ -24,7 +24,7 @@ public:
 protected:
 	sf::Text text;
 
-	virtual void onDraw(sf::RenderTarget& target, sf::Transformable& transform)
+	virtual void OnDraw(sf::RenderTarget& target, sf::Transformable& transform)
 	{
 		text.setPosition(transform.getPosition());
 		text.setScale(transform.getScale());

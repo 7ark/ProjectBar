@@ -40,7 +40,7 @@ void ObjectManager::DrawObjects(sf::RenderTarget& target, Scenes view)
 	{
 		Scenes current = objects[i]->GetScene();
 		if((current == Scenes::SceneAll && view != Scenes::UI) || current == view)
-			objects[i]->draw(target);
+			objects[i]->Draw(target);
 	}
 }
 

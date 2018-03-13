@@ -7,7 +7,7 @@ class Object
 public:
 	std::string name = "Null";
 
-	void draw(sf::RenderTarget& target);
+	void Draw(sf::RenderTarget& target);
 	virtual void Update(float deltaTime) {};
 
 	void SetParent(Object* obj);
@@ -63,7 +63,7 @@ protected:
 	int layer = 0;
 	Scenes scene = Scenes::SceneAll;
 
-	virtual void onDraw(sf::RenderTarget& target, sf::Transformable& transform) = 0;
+	virtual void OnDraw(sf::RenderTarget& target, sf::Transformable& transform) = 0;
 
 	Object* parent = nullptr;
 	std::vector<Object*> children;

@@ -10,6 +10,12 @@ void ResourceManager::Init()
 	{
 		CreateFont(fontPaths[i], (Fonts)i);
 	}
+	for (int i = 1; i < (int)Shaders::Length; i++)
+	{
+		std::string temp(shaderPaths[i]);
+		sf::Shader::Type shaderType = temp.find("vert") != std::string::npos ? sf::Shader::Vertex : temp.find("frag") != std::string::npos ? sf::Shader::Fragment : sf::Shader::Geometry;
+		CreateShader(shaderPaths[i], shaderType, (Shaders)i);
+	}
 }
 
 sf::Texture* ResourceManager::RetrieveTexture(Textures tex)
@@ -42,9 +48,19 @@ sf::Font * ResourceManager::RetrieveFont(Fonts font)
 	return returnedFont;
 }
 
-void ResourceManager::Destroy()
+sf::Shader * ResourceManager::RetrieveShader(Shaders shader, sf::Shader::Type shaderType)
 {
-
+	if (shader == Shaders::Null || shader == Shaders::Length)
+	{
+		std::cout << "ERROR: Attempted to retrieve invalid shader";
+		return nullptr;
+	}
+	sf::Shader* returnedShader = shaders[shader];
+	if (returnedShader == nullptr)
+	{
+		returnedShader = CreateShader(shaderPaths[(int)shader], shaderType, shader);
+	}
+	return returnedShader;
 }
 
 sf::Texture* ResourceManager::CreateTexture(std::string const & textureFile, Textures tex)
@@ -65,4 +81,14 @@ sf::Font * ResourceManager::CreateFont(std::string const & fontFile, Fonts font)
 	fonts.insert(std::pair<Fonts, sf::Font*>(font, returnedFont));
 
 	return returnedFont;
+}
+
+sf::Shader * ResourceManager::CreateShader(std::string const & shaderFile, sf::Shader::Type shaderType, Shaders shader)
+{
+	sf::Shader* returnedShader = new sf::Shader();
+	if (!returnedShader->loadFromFile(shaderFile, shaderType))
+		std::cout << "ERROR: Cannot load shader " << shaderFile;
+	shaders.insert(std::pair<Shaders, sf::Shader*>(shader, returnedShader));
+
+	return returnedShader;
 }
