@@ -32,9 +32,19 @@ void Button::Update(float deltaTime)
 			canClick = true;
 		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && mouseDown && canClick)
 		{
-			CallDelegate(click);
-			Clicked();
+			if (!lockInMenu || (!gameObject->GetVisible() || !Game::menuOpen))
+			{
+				CallDelegate(click);
+				Clicked();
+			}
 		}
+		if(clickTexture != nullptr && mouseDown)
+		gameObject->SetSprite(clickTexture);
+	}
+	if (!inBox || !mouseDown)
+	{
+		if (clickTexture != nullptr)
+			gameObject->SetSprite(originalTexture);
 	}
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -45,6 +55,14 @@ void Button::Update(float deltaTime)
 		canClick = false;
 	}
 	
+}
+
+void Button::SetHighlightShader(sf::Shader * shader, float thickness, sf::Color color)
+{
+	mat.SetShader(shader);
+	mat.AddVec4Uniform("color", color);
+	mat.AddCurrentTextureTypeUniform("texture", sf::Shader::CurrentTexture);
+	shaderThickness = thickness;
 }
 
 void Button::CallDelegate(std::vector<std::function<void()>> const& del)
@@ -61,13 +79,29 @@ void Button::Clicked()
 
 void Button::PointerEnter()
 {
-	if (highlightTexture == nullptr || (gameObject->GetVisible() && Game::menuOpen))
+	if ((gameObject->GetVisible() && Game::menuOpen))
 		return;
-	gameObject->SetSprite(highlightTexture);
+	if(highlightTexture != nullptr)
+		gameObject->SetSprite(highlightTexture);
+	if (mat.GetShader() != nullptr) 
+	{
+		mat.SetTexture(gameObject->GetMaterial()->GetTexture());
+		mat.vec2Uniforms.clear();
+		mat.AddVec2UniformThickness("thickness", sf::Vector2f(shaderThickness, shaderThickness));
+		gameObject->SetShader(mat.GetShader());
+		gameObject->GetMaterial()->vec2Uniforms = mat.vec2Uniforms;
+		gameObject->GetMaterial()->vec4Uniforms = mat.vec4Uniforms;
+		gameObject->GetMaterial()->currentTextureTypeUniforms = mat.currentTextureTypeUniforms;
+	}
 }
 
 void Button::PointerExit()
 {
 	if (highlightTexture != nullptr)
 		gameObject->SetSprite(originalTexture);
+	if (mat.GetShader() != nullptr) 
+	{
+		gameObject->GetMaterial()->ClearAllUniforms();
+		gameObject->SetShader(nullptr);
+	}
 }

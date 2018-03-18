@@ -21,6 +21,14 @@ std::map<Drinks, sf::Color> Game::DrinkColors =
 	{ Drinks::Cyanide, sf::Color(255,255,255) },
 };
 
+std::map<Drinks, char*> Game::DrinkNames =
+{
+	{ Drinks::Water, "Water" },
+	{ Drinks::Beer, "Beer" },
+	{ Drinks::Arsenic, "Arsenic" },
+	{ Drinks::Cyanide, "Cyanide" },
+};
+
 Game::Game()
 {
 	resourceManager.Init();
@@ -51,7 +59,34 @@ void Game::Setup(Scenes scene)
 
 		GameObject* tapper = ObjectManager::CreateObject("Tapper", scene, Textures::Tapper, sf::Vector2f(500, -150));
 		tapper->SetLayer(7);
-	
+
+		liquidStream = ObjectManager::CreateObject("LiquidStream", scene, Textures::WhiteBar, sf::Vector2f(465, -230));
+		liquidStream->SetLayer(8);
+		liquidStream->SetScale(sf::Vector2f(0.1f,0.5f));
+		liquidStream->SetActive(false);
+		liquidStreamAnim = liquidStream->AddComponent<Animation>(Comp::Animation);
+		Key liquidKeys[16] =
+		{
+			Key(0,Textures::WhiteBar, sf::Vector2f(1,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(1.1f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(1.2f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(1.3f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(1.4f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(1.3f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(1.2f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(1.1f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(1,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(0.9f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(0.8f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(0.7f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(0.6f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(0.7f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(0.8f,1)),
+			Key(0,Textures::WhiteBar, sf::Vector2f(0.9f,1))
+		};
+		liquidStreamAnim->SetKeys(liquidKeys,16);
+		liquidStreamAnim->SetConstantTime(0.1f);
+		liquidStreamAnim->Play(true);
 	}
 		break;
 	case Scenes::SceneLeft:
@@ -73,14 +108,14 @@ void Game::Setup(Scenes scene)
 		journal->SetScale(sf::Vector2f(0.3f, 0.3f));
 		char* journalNotes[4] =
 		{
-			"Humans: Weak creatures that love\nto kill shit\n\nDrinks They Enjoy: Any kind of beer\n\nPoisonous: Acid",
-			"Animals: I don't know, I'm just\ntrying to fill up some of the space in this book.\n\nDrinks They Enjoy: Water???\n\nPoisonous: Literally everything",
-			"Something else: I'm just trying to fill\npages at this point to be honest.\n\nDrinks They Enjoy: Who?? \nThis isn't very specific\n\nPoisonous: Memes",
-			"Manpat: Best god damn #other-dev dude.\n\nDrinks They Enjoy: sarsaparilla and \norange juice\n\nPoisonous: Everything humans die from"
+			"Humans: Weak creatures that love\nto kill shit\n\nDrinks They Enjoy: Any kind of beer\n\nPoisonous: Acid\n\n\n\n\n\n\n\n\n\n\n\n",
+			"Animals: I don't know, I'm just\ntrying to fill up some of the space in this book.\n\nDrinks They Enjoy: Water???\n\nPoisonous: Literally everything\n\n\n\n\n\n\n\n\n\n\n\n",
+			"Something else: I'm just trying to fill\npages at this point to be honest.\n\nDrinks They Enjoy: Who?? \nThis isn't very specific\n\nPoisonous: Memes\n\n\n\n\n\n\n\n\n\n\n\n",
+			"Manpat: Best god damn #other-dev dude.\n\nDrinks They Enjoy: sarsaparilla and \norange juice\n\nPoisonous: Everything humans die from\n\n\n\n\n\n\n\n\n\n\n\n"
 		};
 		DisplayObject* journalDisplay = journal->AddComponent<DisplayObject>(Comp::DisplayObject);
 		journalDisplay->Init(Textures::JournalOpen, 4, journalNotes);
-		journalDisplay->SetHighlightTexture(Textures::Journal, Textures::JournalHighlight);
+		journalDisplay->SetHighlightShader(resourceManager.RetrieveShader(Shaders::Outline, sf::Shader::Fragment), 10);
 
 		GameObject* newspaper = ObjectManager::CreateObject("Newspaper", scene, Textures::Newspaper, sf::Vector2f(-600, -400));
 		newspaper->SetScale(sf::Vector2f(0.3f, 0.3f));
@@ -93,7 +128,7 @@ void Game::Setup(Scenes scene)
 		};
 		DisplayObject* newspaperDisplay = newspaper->AddComponent<DisplayObject>(Comp::DisplayObject);
 		newspaperDisplay->Init(Textures::JournalOpen, 4, newsNotes);
-		newspaperDisplay->SetHighlightTexture(Textures::Newspaper, Textures::NewspaperHighlight);
+		newspaperDisplay->SetHighlightShader(resourceManager.RetrieveShader(Shaders::Outline, sf::Shader::Fragment), 10);
 
 		sign = ObjectManager::CreateObject("OpenSign", scene, Textures::SignClosed, sf::Vector2f(650, 500));
 		sign->SetScale(sf::Vector2f(0.5f, 0.5f));
@@ -119,12 +154,51 @@ void Game::Setup(Scenes scene)
 		serveDrinkButton->SetScale(sf::Vector2f(0.3f, 0.3f));
 		Button* serveButton = serveDrinkButton->AddComponent<Button>(Comp::Button);
 		serveButton->click.push_back(std::bind(&Game::ServeDrink, this));
-		serveButton->SetHighlightTexture(Textures::EmptySign, Textures::SignOpen);
+		serveButton->SetHighlightShader(resourceManager.RetrieveShader(Shaders::Outline, sf::Shader::Fragment), 10);
 
 		GameObject* addGlassButton = ObjectManager::CreateObject("AddGlassButton", scene, Textures::GlassCup, sf::Vector2f(80, -480));
 		addGlassButton->SetScale(sf::Vector2f(0.05f, 0.05f));
 		addGlassButton->SetRotation(180);
-		addGlassButton->AddComponent<Button>(Comp::Button)->click.push_back(std::bind(&Game::SetNewGlass, this));
+		Button* gButton = addGlassButton->AddComponent<Button>(Comp::Button);
+		gButton->click.push_back(std::bind(&Game::SetNewGlass, this));
+		gButton->SetHighlightShader(resourceManager.RetrieveShader(Shaders::Outline, sf::Shader::Fragment), 50);
+
+		GameObject* pourButton = ObjectManager::CreateObject("PourButton", scene, Textures::TapperButtonUp, sf::Vector2f(0, 30));
+		pourButton->SetScale(sf::Vector2f(3, 1.3f));
+		Button* pourButtonComp = pourButton->AddComponent<Button>(Comp::Button);
+		pourButtonComp->SetClickTexture(Textures::TapperButtonUp, Textures::TapperButtonDown);
+		pourButtonComp->click.push_back([this]() { this->Pour(); });
+		Text* pourButtonText = ObjectManager::CreateText("PourButtonText", scene, Fonts::Hughs, "Pour", sf::Vector2f(0, 10));
+		pourButtonText->SetParent(pourButton);
+		pourButtonText->SetScale(sf::Vector2f(0.5f, 1));
+
+		std::vector<Button*> buttons;
+		for (size_t i = 0; i < (int)Drinks::Length; i++)
+		{
+			char* drinkName = DrinkNames[(Drinks)i];
+			std::string name = std::string(drinkName) + "Button";
+			GameObject* drinkTapperButton = ObjectManager::CreateObject(name, scene, Textures::TapperButtonUp, sf::Vector2f(50, 300 - i * 50));
+			Button* tapperButton = drinkTapperButton->AddComponent<Button>(Comp::Button);
+			buttons.push_back(tapperButton);
+			if (Drinks::Water == (Drinks)i) 
+				drinkTapperButton->SetSprite(resourceManager.RetrieveTexture(Textures::TapperButtonDown));
+
+			Text* tapperText = ObjectManager::CreateText(name + "Text", scene, Fonts::Hughs, drinkName, sf::Vector2f(-100,5));
+			tapperText->SetParent(drinkTapperButton);
+		}
+
+		for (size_t i = 0; i < buttons.size(); i++)
+		{
+			int index = i;
+			buttons[i]->click.push_back([this, index, buttons]() 
+			{ 
+				selectedTapper = (Drinks)index;
+				for (size_t j = 0; j < buttons.size(); j++)
+				{
+					buttons[j]->gameObject->SetSprite(resourceManager.RetrieveTexture(index == j ? Textures::TapperButtonDown : Textures::TapperButtonUp));
+				}
+			});
+		}
 
 		GameObject* frame = ObjectManager::CreateObject("Frame", scene, Textures::Frame, sf::Vector2f(0, 0));
 		frame->SetScale(sf::Vector2f(0.2f, 0.52f));
@@ -147,6 +221,7 @@ void Game::ServeDrink()
 
 void Game::SetNewGlass()
 {
+	EmptyDrink();
 	DestroyCurrentGlass();
 	DestroyCurrentLiquid();
 	currentGlass = ObjectManager::CreateObject("CurrentGlassCup", Scenes::SceneAll, Textures::GlassCup, sf::Vector2f(570, -500));
@@ -166,9 +241,26 @@ void Game::CreateLiquidAsset()
 	currentLiquid = ObjectManager::CreateObject("Liquid", Scenes::SceneAll, Textures::Liquid);
 	currentLiquid->SetLayer(10);
 	currentLiquid->SetParent(currentGlass);
-	currentLiquid->SetColor(DrinkColors[(Drinks)(rand()%(int)Drinks::Length)]);
 	currentLiquid->SetFillMode(FillMode::BottomToTop);
 	currentLiquid->SetFillAmount(0);
+}
+
+void Game::Pour()
+{
+	Drinks drink = selectedTapper;
+	if (currentLiquid != nullptr && drinksInCup.size() < 4)
+	{
+		std::cout << "Pouring " << (drink == Drinks::Arsenic ? "Arsenic" : drink == Drinks::Beer ? "Beer" : drink == Drinks::Cyanide ? "Cyanide" : "Water") << '\n';
+		drinksInCup.push_back(drink);
+		drinkBeingPoured = drink;
+		if (drinksInCup.size() == 4)
+			std::cout << "FULL -------------------------------\n";
+	}
+}
+
+void Game::EmptyDrink()
+{
+	drinksInCup.clear();
 }
 
 void Game::Open()
@@ -227,8 +319,6 @@ void Game::Run(sf::RenderWindow& window,sf::View& view, sf::View& viewUI, sf::Vi
 		float deltaTime = clock.restart().asSeconds();
 		Update(deltaTime);
 
-		if (currentLiquid != nullptr)
-			currentLiquid->ChangeFillAmount(deltaTime);
 		//Game Update
 		switch (currentGameState)
 		{
@@ -244,13 +334,58 @@ void Game::Run(sf::RenderWindow& window,sf::View& view, sf::View& viewUI, sf::Vi
 			break;
 		case GameState::WithCustomer:
 			customerTimer = 0;
+			
 			break;
 		case GameState::Billing:
 			break;
 		default:
 			break;
 		}
+		if (currentLiquid != nullptr)
+		{
+			if (currentLiquid->GetFillAmount() < drinksInCup.size()*0.25f)
+			{
+				liquidStream->SetActive(true);
+				liquidStream->SetColor(DrinkColors[drinkBeingPoured]);
+				currentLiquid->ChangeFillAmount(deltaTime*0.3f);
+				sf::Color initialDrinkColor = DrinkColors[drinksInCup[0]];
+				float resultR = initialDrinkColor.r;
+				float resultG = initialDrinkColor.g;
+				float resultB = initialDrinkColor.b;
+				float resultA = initialDrinkColor.a;
+				for (size_t i = 1; i < drinksInCup.size(); i++)
+				{
+					sf::Color current = DrinkColors[drinksInCup[i]];
 
+					resultR += current.r;
+					resultG += current.g;
+					resultB += current.b;
+					resultA += current.a;
+				}
+				sf::Color result = sf::Color(
+					resultR / drinksInCup.size(),
+					resultG / drinksInCup.size(),
+					resultB / drinksInCup.size(),
+					resultA / drinksInCup.size()
+					);
+				currentLiquid->SetColor(result);
+			}
+			else
+			{
+				liquidStream->SetActive(false);
+			}
+				//Drinks currentDrink = drinksInCup[0];
+				//sf::Color drinkColor = DrinkColors[currentDrink];
+				//sf::Color currentDrinkColor = drinkColor;
+				//for (size_t i = 1; i < drinksInCup.size(); i++)
+				//{
+				//	sf::Color current = DrinkColors[drinksInCup[i]];
+				//	float fillAmountCurrent = (i != drinksInCup.size() - 1 ? 0.25f : fmod(currentLiquid->GetFillAmount(), 0.25f));
+				//	drinkColor = HelperFunctions::Lerp(drinkColor, current, fillAmountCurrent);
+				//}
+				//currentLiquid->SetColor(drinkColor);
+			//}
+		}
 		//Draw all of our everything
 		Draw(window, view, viewUI, viewBev);
 		window.display();

@@ -9,10 +9,8 @@ enum class Textures
 	BarBackground,
 	BarCounter,
 	Journal,
-	JournalHighlight,
 	JournalOpen,
 	Newspaper,
-	NewspaperHighlight,
 	ArrowDrawn,
 	SignOpen,
 	SignClosed,
@@ -23,6 +21,7 @@ enum class Textures
 	Frame,
 	TapperButtonUp,
 	TapperButtonDown,
+	WhiteBar,
 	Man,
 
 	Length
@@ -54,10 +53,8 @@ class ResourceManager
 		"Textures/BarBackground.png",
 		"Textures/BarCounter.png",
 		"Textures/Journal.png",
-		"Textures/JournalHighlight.png",
 		"Textures/JournalOpen.png",
 		"Textures/Newspaper.png",
-		"Textures/NewspaperHighlight.png",
 		"Textures/ArrowDrawn.png",
 		"Textures/SignOpen.png",
 		"Textures/SignClosed.png",
@@ -68,6 +65,7 @@ class ResourceManager
 		"Textures/BevFrame.png",
 		"Textures/TapperButtonUp.png",
 		"Textures/TapperButtonDown.png",
+		"Textures/WhiteBar.png",
 		"Textures/Races/Human/Man.png"
 	};
 

@@ -26,13 +26,30 @@ void Animation::SetKeys(Key _keys[], int size)
 	}
 }
 
+void Animation::SetConstantTime(float t)
+{
+	for (size_t i = 0; i < keysSize-1; i++)
+	{
+		keys[i].time = t;
+	}
+}
+
 void Animation::Update(float deltaTime)
 {
-	if (playing && keysSize != 0 && abs(keys[currentKey].time - timer.getElapsedTime().asSeconds()) < 0.01f)
+	if (gameObject == nullptr) return;
+	if (!setScaleYet)
+	{
+		originalScale = gameObject->GetScale();
+		setScaleYet = true;
+	}
+	if (playing)
+		timer += 0.001f;
+	else
+		timer = 0;
+	if (playing && keysSize != 0 && timer >= keys[currentKey].time)
 	{
 		if (currentKey == keysSize-1)
 		{
-			timer.restart();
 			if (looping)
 				currentKey = 0;
 			else
@@ -40,7 +57,11 @@ void Animation::Update(float deltaTime)
 		}
 		else
 			currentKey++;
+
 		gameObject->SetSprite(keys[currentKey].texture);
+		sf::Vector2f newScale = sf::Vector2f(originalScale.x*keys[currentKey].scale.x, originalScale.y*keys[currentKey].scale.y);
+		gameObject->SetScale(newScale);
+		timer = 0;
 	}
 
 }
@@ -50,7 +71,13 @@ void Animation::Play(bool loop)
 	looping = loop;
 	playing = true;
 	currentKey = 0;
-	timer.restart();
+	timer = 0;
+}
+
+void Animation::Stop()
+{
+	looping = false;
+	playing = false;
 }
 
 bool Animation::IsPlaying()

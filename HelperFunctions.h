@@ -11,6 +11,16 @@ struct HelperFunctions
 	{
 		return one + delta * (two - one);
 	}
+	
+	static sf::Color Lerp(sf::Color one, sf::Color two, float delta)
+	{
+		return sf::Color(
+			Lerp(one.r, two.r, delta),
+			Lerp(one.g, two.g, delta),
+			Lerp(one.b, two.b, delta),
+			Lerp(one.a, two.a, delta)
+		);
+	}
 
 	static float Clamp(float value, float min, float max)
 	{

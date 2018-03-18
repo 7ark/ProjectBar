@@ -29,4 +29,8 @@ void Material::BindShader()
 	{
 		shader->setUniform(uniform.first, uniform.second);
 	}
+	for (auto&& uniform : vec2Uniforms)
+	{
+		shader->setUniform(uniform.first, uniform.second);
+	}
 }

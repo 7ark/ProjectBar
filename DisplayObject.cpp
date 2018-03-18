@@ -23,14 +23,14 @@ void DisplayObject::Init(Textures const openJournalTex, unsigned int const pageL
 	openedImage->SetLayer(10);
 	openedImage->SetActive(false);
 
-	displayTextLeft = ObjectManager::CreateText("TextLeft" + gameObject->name, Scenes::UI, Fonts::Hughs, notes[currentPage], sf::Vector2f(-360, 220));
+	displayTextLeft = ObjectManager::CreateText("TextLeft" + gameObject->name, Scenes::UI, Fonts::Hughs, notes[currentPage], sf::Vector2f(-190, 20));
 	displayTextLeft->SetSize(fontSize);
 	displayTextLeft->SetColor(sf::Color::Black);
 	displayTextLeft->SetParent(openedImage);
 	displayTextLeft->SetLayer(11);
 	displayTextLeft->SetActive(false);
 
-	displayTextRight = ObjectManager::CreateText("TextRight" + gameObject->name, Scenes::UI, Fonts::Hughs, notes[currentPage + 1], sf::Vector2f(0, 220));
+	displayTextRight = ObjectManager::CreateText("TextRight" + gameObject->name, Scenes::UI, Fonts::Hughs, notes[currentPage + 1], sf::Vector2f(190, 20));
 	displayTextRight->SetSize(fontSize);
 	displayTextRight->SetColor(sf::Color::Black);
 	displayTextRight->SetParent(openedImage);
@@ -43,6 +43,7 @@ void DisplayObject::Init(Textures const openJournalTex, unsigned int const pageL
 	changePageLeft->SetLayer(12);
 	changePageLeft->SetActive(false);
 	Button* leftButton = changePageLeft->AddComponent<Button>(Comp::Button);
+	leftButton->lockInMenu = false;
 	leftButton->pointerEnter.push_back(std::bind(&DisplayObject::HoverOnLeft, this));
 	leftButton->pointerExit.push_back(std::bind(&DisplayObject::HoverOffLeft, this));
 	leftButton->click.push_back(std::bind(&DisplayObject::FlipLeft, this));
@@ -53,9 +54,10 @@ void DisplayObject::Init(Textures const openJournalTex, unsigned int const pageL
 	changePageRight->SetLayer(12);
 	changePageRight->SetActive(false);
 	Button* rightButton = changePageRight->AddComponent<Button>(Comp::Button);
+	rightButton->lockInMenu = false;
 	rightButton->pointerEnter.push_back(std::bind(&DisplayObject::HoverOnRight, this));
 	rightButton->pointerExit.push_back(std::bind(&DisplayObject::HoverOffRight, this));
-	rightButton->click.push_back(std::bind(&DisplayObject::FlipRight, this));
+	rightButton->click.push_back([this]() { FlipPage(true); });//  std::bind(&DisplayObject::FlipRight, this));
 
 	UpdatePage();
 }

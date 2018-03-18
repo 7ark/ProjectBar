@@ -16,6 +16,7 @@ public:
 	static bool menuOpen;
 	static GameState currentGameState;
 	static std::map<Drinks, sf::Color> DrinkColors;
+	static std::map<Drinks, char*> DrinkNames;
 
 	Game();
 	~Game();
@@ -26,6 +27,7 @@ public:
 	void Update(float deltaTime);
 
 	void Draw(sf::RenderTarget& target, sf::View& view, sf::View& viewUI, sf::View& viewBev);
+	void Pour();
 
 	static sf::RenderWindow* window;
 
@@ -37,6 +39,7 @@ private:
 	void ServeDrink();
 	void SetNewGlass();
 	void CreateLiquidAsset();
+	void EmptyDrink();
 
 	void CustomerEnter();
 
@@ -46,8 +49,11 @@ private:
 
 	const sf::Vector2f doorPosition = sf::Vector2f(300, 300);
 
+	Drinks selectedTapper = Drinks::Water;
 	std::vector<GameObject*> customersInBar;
 	GameObject* currentCustomer;
+	std::vector<Drinks> drinksInCup;
+	Drinks drinkBeingPoured;
 
 	//Objects
 	GameObject* counter;
@@ -55,6 +61,8 @@ private:
 	GameObject* sign;
 	GameObject* currentGlass;
 	GameObject* currentLiquid;
+	GameObject* liquidStream; 
+	Animation* liquidStreamAnim;
 	Animation* signOpen;
 	Animation* signClosed;
 };

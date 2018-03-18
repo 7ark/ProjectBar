@@ -7,7 +7,7 @@ Text::Text(std::string _name, Fonts const & fontName, sf::String txt, sf::Vector
 	name = _name;
 	sf::Font* font = Game::resourceManager.RetrieveFont(fontName);
 	SetFont(*font);
-	SetText(txt);
+	SetText(txt, true);
 	SetPosition(position);
 }
 

@@ -10,7 +10,14 @@ public:
 	~Text();
 
 	//Setters
-	void SetText(sf::String txt) { text.setString(txt); }
+	void SetText(sf::String txt, bool centered = true) 
+	{ 
+		text.setString(txt); 
+		if (centered)
+		{
+			text.setOrigin(sf::Vector2f(text.getLocalBounds().width / 2, text.getLocalBounds().height / 2));
+		}
+	}
 	void SetFont(sf::Font& font) { text.setFont(font); }
 	void SetColor(sf::Color col) { text.setFillColor(col); }
 	void SetSize(unsigned int size) { text.setCharacterSize(size); }
