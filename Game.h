@@ -5,11 +5,13 @@
 #include "Customer.h"
 #include "Component.h"
 #include "Drink.h"
+#include "Text.h"
 
 class GameObject;
 class Animation;
+class Button;
 
-enum class GameState { PreOpen, Open, WithCustomer, Billing };
+enum class GameState { PreOpen, Open, WithCustomer, CustomerTalking, Billing };
 
 class Game
 {
@@ -37,6 +39,7 @@ private:
 
 	void Open();
 	void ServeDrink();
+	void EvaluateCustomerReaction(CustomerState reaction);
 	void SetNewGlass();
 	void CreateLiquidAsset();
 	void EmptyDrink();
@@ -55,6 +58,9 @@ private:
 	std::vector<GameObject*> customersInBar; //Customers that have come in, and are in the background drinking.
 	Customer* currentCustomer;
 	Drink currentDrink;
+	std::vector<std::string> currentDialogueTree;
+	std::map<DialogueOptions, Button*> dialogueButtons;
+	int dialogueTreeIndex = 0;
 	bool drinkHasBeenServed = false;
 
 	//Objects
@@ -64,6 +70,8 @@ private:
 	GameObject* currentGlass;
 	GameObject* currentLiquid;
 	GameObject* liquidStream; 
+	GameObject* dialogueBox;
+	Text* currentDisplayedDialogue;
 	Animation* liquidStreamAnim;
 	Animation* signOpen;
 	Animation* signClosed;

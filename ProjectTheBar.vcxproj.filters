@@ -16,14 +16,14 @@
     <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{05699aee-b65c-4214-8c22-ab8c1c6a25eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Objects">
-      <UniqueIdentifier>{04e553c6-0cfa-4c39-9090-ae1f84e34736}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Jsons">
       <UniqueIdentifier>{89900e6a-b550-46db-8d13-96677739eb87}</UniqueIdentifier>
     </Filter>
     <Filter Include="Jsons\Character Jsons">
       <UniqueIdentifier>{3042880f-905c-4a36-94f1-3dc79dda0a59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Objects">
+      <UniqueIdentifier>{04e553c6-0cfa-4c39-9090-ae1f84e34736}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +57,6 @@
     <ClCompile Include="Object.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DisplayObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -77,6 +74,12 @@
     </ClCompile>
     <ClCompile Include="Drink.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialogue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,9 +113,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DisplayObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -136,6 +136,12 @@
     </ClInclude>
     <ClInclude Include="Drink.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialogue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

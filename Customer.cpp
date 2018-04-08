@@ -4,6 +4,7 @@
 
 Customer::Customer()
 {
+	customerDialogue.SetDialogue();
 }
 
 

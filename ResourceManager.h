@@ -23,6 +23,12 @@ enum class Textures
 	SquareButtonDown,
 	WhiteBar,
 	RoundButton,
+	RoundButtonHappy,
+	RoundButtonTravel,
+	RoundButtonAsk,
+	RoundButtonCareer,
+	RoundButtonExpose,
+	DialogueBox,
 	Man,
 
 	Length
@@ -69,6 +75,12 @@ class ResourceManager
 		"Textures/TapperButtonDown.png",
 		"Textures/WhiteBar.png",
 		"Textures/RoundButton.png",
+		"Textures/RoundButtonHappy.png",
+		"Textures/RoundButtonTravel.png",
+		"Textures/RoundButtonAsk.png",
+		"Textures/RoundButtonCareer.png",
+		"Textures/RoundButtonExpose.png",
+		"Textures/DialogueBox.png",
 		"Textures/Races/Human/Man.png"
 	};
 

@@ -36,7 +36,15 @@ protected:
 		text.setPosition(transform.getPosition());
 		text.setScale(transform.getScale());
 		text.setRotation(transform.getRotation());
-		if (enabled && visible)
+
+		bool canDraw = enabled && visible;
+		if (parent != nullptr)
+		{
+			if (!parent->GetActive() || !parent->GetVisible())
+				canDraw = false;
+		}
+
+		if (canDraw)
 			target.draw(text);
 	}
 };

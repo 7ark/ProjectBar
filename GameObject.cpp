@@ -115,7 +115,14 @@ void GameObject::OnDraw(sf::RenderTarget & target, sf::Transformable & transform
 
 	material.BindShader();
 
-	if (enabled && visible) 
+	bool canDraw = enabled && visible;
+	if (parent != nullptr)
+	{
+		if (!parent->GetActive() || !parent->GetVisible())
+			canDraw = false;
+	}
+
+	if (canDraw) 
 	{
 		target.draw(sprite, material.GetShader());
 	}

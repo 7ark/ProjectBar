@@ -8,4 +8,4 @@
 enum class Scenes { SceneAll, SceneRight, SceneLeft, UI, Beverages, Length };
 enum class FillMode { None, BottomToTop, TopToBottom, LeftToRight, RightToLeft };
 
-enum class DialogueOptions { Happy, Travel, Ask, Career, Expose };
+enum class DialogueOptions { Happy, Travel, Ask, Career, Expose, Length };

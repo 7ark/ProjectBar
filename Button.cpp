@@ -1,5 +1,4 @@
 #include "Button.h"
-#include "Game.h"
 
 void Button::Update(float deltaTime)
 {
