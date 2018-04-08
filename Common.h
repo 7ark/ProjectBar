@@ -8,12 +8,4 @@
 enum class Scenes { SceneAll, SceneRight, SceneLeft, UI, Beverages, Length };
 enum class FillMode { None, BottomToTop, TopToBottom, LeftToRight, RightToLeft };
 
-enum class Drinks
-{
-	Water,
-	Beer,
-	Arsenic,
-	Cyanide,
-
-	Length
-};
+enum class DialogueOptions { Happy, Travel, Ask, Career, Expose };

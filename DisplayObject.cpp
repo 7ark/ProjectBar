@@ -12,6 +12,7 @@ DisplayObject::DisplayObject()
 
 void DisplayObject::Init(Textures const openJournalTex, unsigned int const pageLength, char * const note[])
 {
+	//Alright, this class is wacky. Forgive me.
 	pageSize = pageLength;
 	notes.clear();
 	for (int i = 0; i < pageLength; i++)
@@ -23,14 +24,14 @@ void DisplayObject::Init(Textures const openJournalTex, unsigned int const pageL
 	openedImage->SetLayer(10);
 	openedImage->SetActive(false);
 
-	displayTextLeft = ObjectManager::CreateText("TextLeft" + gameObject->name, Scenes::UI, Fonts::Hughs, notes[currentPage], sf::Vector2f(-190, 20));
+	displayTextLeft = ObjectManager::CreateText("TextLeft" + gameObject->name, Scenes::UI, Fonts::Hughs, notes[currentPage], sf::Vector2f(-150, -40));
 	displayTextLeft->SetSize(fontSize);
 	displayTextLeft->SetColor(sf::Color::Black);
 	displayTextLeft->SetParent(openedImage);
 	displayTextLeft->SetLayer(11);
 	displayTextLeft->SetActive(false);
 
-	displayTextRight = ObjectManager::CreateText("TextRight" + gameObject->name, Scenes::UI, Fonts::Hughs, notes[currentPage + 1], sf::Vector2f(190, 20));
+	displayTextRight = ObjectManager::CreateText("TextRight" + gameObject->name, Scenes::UI, Fonts::Hughs, notes[currentPage + 1], sf::Vector2f(250, -40));
 	displayTextRight->SetSize(fontSize);
 	displayTextRight->SetColor(sf::Color::Black);
 	displayTextRight->SetParent(openedImage);
@@ -101,20 +102,13 @@ void DisplayObject::Clicked()
 
 void DisplayObject::UpdatePage()
 {
-	displayTextLeft->SetText(notes[currentPage]);
-	displayTextRight->SetText(notes[currentPage+1]);
+	displayTextLeft->SetText(notes[currentPage], false);
+	displayTextRight->SetText(notes[currentPage+1], false);
 
 	if (!gameObject->GetVisible()) 
 	{
-		if (currentPage == 0)
-			changePageLeft->SetActive(false);
-		else
-			changePageLeft->SetActive(true);
-
-		if (currentPage == pageSize - 2)
-			changePageRight->SetActive(false);
-		else
-			changePageRight->SetActive(true);
+		changePageLeft->SetActive(currentPage != 0);
+		changePageRight->SetActive(currentPage != pageSize - 2);
 	}
 	else
 	{

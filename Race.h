@@ -1,5 +1,8 @@
 #pragma once
 #include "Common.h"
+#include "Drink.h"
+
+enum class Races { Human };
 
 struct Race
 {
@@ -7,7 +10,7 @@ struct Race
 	~Race();
 
 	sf::String name;
-	std::vector<Drinks> poisonous;
+	std::vector<LiquidTypes> poisonous;
 };
 
 struct Human : Race
@@ -15,7 +18,7 @@ struct Human : Race
 	Human()
 	{
 		name = "Human";
-		poisonous.push_back(Drinks::Cyanide);
-		poisonous.push_back(Drinks::Arsenic);
+		poisonous.push_back(LiquidTypes::Cyanide);
+		poisonous.push_back(LiquidTypes::Arsenic);
 	}
 };

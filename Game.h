@@ -2,7 +2,9 @@
 #include "Common.h"
 #include "ResourceManager.h"
 #include "Race.h"
+#include "Customer.h"
 #include "Component.h"
+#include "Drink.h"
 
 class GameObject;
 class Animation;
@@ -15,8 +17,6 @@ public:
 	static ResourceManager resourceManager;
 	static bool menuOpen;
 	static GameState currentGameState;
-	static std::map<Drinks, sf::Color> DrinkColors;
-	static std::map<Drinks, char*> DrinkNames;
 
 	Game();
 	~Game();
@@ -41,6 +41,7 @@ private:
 	void CreateLiquidAsset();
 	void EmptyDrink();
 
+	void DefineNewCharacter(Customer* customer);
 	void CustomerEnter();
 
 	void DestroyCurrentGlass();
@@ -49,11 +50,12 @@ private:
 
 	const sf::Vector2f doorPosition = sf::Vector2f(300, 300);
 
-	Drinks selectedTapper = Drinks::Water;
-	std::vector<GameObject*> customersInBar;
-	GameObject* currentCustomer;
-	std::vector<Drinks> drinksInCup;
-	Drinks drinkBeingPoured;
+	//Drinks and customers and shit
+	LiquidTypes selectedTapper = LiquidTypes::Water;
+	std::vector<GameObject*> customersInBar; //Customers that have come in, and are in the background drinking.
+	Customer* currentCustomer;
+	Drink currentDrink;
+	bool drinkHasBeenServed = false;
 
 	//Objects
 	GameObject* counter;

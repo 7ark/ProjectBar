@@ -32,10 +32,13 @@ struct HelperFunctions
 		return Clamp(value, 0, 1);
 	}
 
-	template<class T>
-	static typename T::iterator remove(typename T::iterator begin, typename T::iterator end, typename T::value const& value) {
-		return std::remove_if(begin, end, [&value](T::value const& other) {
-			return value == other;
-		});
+	static float Max(float one, float two)
+	{
+		return one > two ? one : two;
+	}
+
+	static float Min(float one, float two)
+	{
+		return one < two ? one : two;
 	}
 };

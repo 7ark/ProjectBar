@@ -19,6 +19,12 @@
     <Filter Include="Header Files\Objects">
       <UniqueIdentifier>{04e553c6-0cfa-4c39-9090-ae1f84e34736}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Jsons">
+      <UniqueIdentifier>{89900e6a-b550-46db-8d13-96677739eb87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Jsons\Character Jsons">
+      <UniqueIdentifier>{3042880f-905c-4a36-94f1-3dc79dda0a59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -67,6 +73,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Drink.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -125,10 +134,21 @@
     <ClInclude Include="Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Drink.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ProjectTheBar.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Test.json">
+      <Filter>Jsons</Filter>
+    </None>
+    <None Include="TestCharacter.json">
+      <Filter>Jsons\Character Jsons</Filter>
+    </None>
   </ItemGroup>
 </Project>

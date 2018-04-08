@@ -11,6 +11,12 @@ struct Key
 		texture = Game::resourceManager.RetrieveTexture(tex);
 		scale = s;
 	}
+	Key(Textures tex, sf::Vector2f s = sf::Vector2f(1, 1))
+	{
+		time = 0;
+		texture = Game::resourceManager.RetrieveTexture(tex);
+		scale = s;
+	}
 	float time;
 	sf::Texture* texture;
 	sf::Vector2f scale;

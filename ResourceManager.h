@@ -19,9 +19,10 @@ enum class Textures
 	GlassCup,
 	Liquid,
 	Frame,
-	TapperButtonUp,
-	TapperButtonDown,
+	SquareButtonUp,
+	SquareButtonDown,
 	WhiteBar,
+	RoundButton,
 	Man,
 
 	Length
@@ -46,6 +47,7 @@ enum class Shaders
 class ResourceManager
 {
 #pragma region Paths
+	//Listen. It's messy. But it works. Story of my life.
 	const char* texturePaths[(int)Textures::Length] =
 	{
 		"Null",
@@ -66,6 +68,7 @@ class ResourceManager
 		"Textures/TapperButtonUp.png",
 		"Textures/TapperButtonDown.png",
 		"Textures/WhiteBar.png",
+		"Textures/RoundButton.png",
 		"Textures/Races/Human/Man.png"
 	};
 

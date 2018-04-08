@@ -162,6 +162,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Customer.cpp" />
+    <ClCompile Include="Drink.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameSettings.cpp" />
     <ClCompile Include="DisplayObject.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Drink.h" />
     <ClInclude Include="HelperFunctions.h" />
     <ClInclude Include="Customer.h" />
     <ClInclude Include="Game.h" />
@@ -197,6 +199,10 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ProjectTheBar.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Test.json" />
+    <None Include="TestCharacter.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

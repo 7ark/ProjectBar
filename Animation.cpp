@@ -37,15 +37,22 @@ void Animation::SetConstantTime(float t)
 void Animation::Update(float deltaTime)
 {
 	if (gameObject == nullptr) return;
+
 	if (!setScaleYet)
 	{
 		originalScale = gameObject->GetScale();
 		setScaleYet = true;
 	}
+
+	//I was doing += deltaTime, but it has a weird delay or parts of it slows down??
+	//I'm not really sure why, but it looks fine at a constant... could be an issue in the future. I'll have to see.
+	//Also might look fine with an actual animation rather than changing the scale
 	if (playing)
 		timer += 0.001f;
 	else
 		timer = 0;
+	
+	//Are we ready to... change our frame of the animation
 	if (playing && keysSize != 0 && timer >= keys[currentKey].time)
 	{
 		if (currentKey == keysSize-1)
