@@ -29,6 +29,7 @@ enum class Textures
 	RoundButtonCareer,
 	RoundButtonExpose,
 	DialogueBox,
+	Table,
 	Man,
 
 	Length
@@ -81,6 +82,7 @@ class ResourceManager
 		"Textures/RoundButtonCareer.png",
 		"Textures/RoundButtonExpose.png",
 		"Textures/DialogueBox.png",
+		"Textures/Table.png",
 		"Textures/Races/Human/Man.png"
 	};
 

@@ -16,13 +16,13 @@ void Customer::Update(float deltaTime)
 {
 }
 
-CustomerState Customer::EvaluateDrink(Drink drink)
+CustomerReaction Customer::EvaluateDrink(Drink drink)
 {
 	for (int i = 0; i < race.poisonous.size(); i++)
 	{
 		if (drink.HasLiquid(race.poisonous[i]))
 		{
-			return CustomerState::Dead;
+			return CustomerReaction::Dead;
 		}
 	}
 
@@ -30,7 +30,7 @@ CustomerState Customer::EvaluateDrink(Drink drink)
 	{
 		if (drink.HasLiquid(preferredLiquids[i]))
 		{
-			return CustomerState::Liked;
+			return CustomerReaction::Liked;
 		}
 	}
 
@@ -38,9 +38,9 @@ CustomerState Customer::EvaluateDrink(Drink drink)
 	{
 		if (drink.HasLiquid(dislikedLiquids[i]))
 		{
-			return CustomerState::Disliked;
+			return CustomerReaction::Disliked;
 		}
 	}
 
-	return CustomerState::Neutral;
+	return CustomerReaction::Neutral;
 }

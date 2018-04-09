@@ -39,8 +39,10 @@ void ObjectManager::DrawObjects(sf::RenderTarget& target, Scenes view)
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		Scenes current = objects[i]->GetScene();
-		if((current == Scenes::SceneAll && view != Scenes::UI) || current == view)
+		if ((current == Scenes::SceneAll && view != Scenes::UI) || current == view)
+		{
 			objects[i]->Draw(target);
+		}
 	}
 }
 

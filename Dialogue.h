@@ -12,10 +12,16 @@ public:
 
 	std::vector<std::string> GetDialogue(DialogueOptions dialogue)
 	{
-		return dialogues[dialogue];
+		return optionDialogues[dialogue];
+	}
+
+	std::vector<std::string> GetDialogue(CustomerReaction dialogue)
+	{
+		return reactionDialogues[dialogue];
 	}
 
 private:
-	std::map<DialogueOptions, std::vector<std::string>> dialogues;
+	std::map<DialogueOptions, std::vector<std::string>> optionDialogues; 
+	std::map<CustomerReaction, std::vector<std::string>> reactionDialogues;
 };
 

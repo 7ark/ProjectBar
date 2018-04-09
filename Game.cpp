@@ -85,6 +85,15 @@ void Game::Setup(Scenes scene)
 			bartender = ObjectManager::CreateObject("Bartender", scene, Textures::Bartender, sf::Vector2f(100, -450));
 			bartender->SetScale(sf::Vector2f(2.0f, 2.0f));
 			bartender->SetLayer(10);
+
+			for (int i = 0; i < 3; i++)
+			{
+				GameObject* table = ObjectManager::CreateObject("Table" + i, scene, Textures::Table, sf::Vector2f(-300 + (i * 350), 200));
+				table->SetLayer(3);
+				table->SetScale(sf::Vector2f(0.4f, 0.4f));
+
+				tables.push_back(table);
+			}
 		}
 		break;
 		case Scenes::UI:
@@ -145,7 +154,7 @@ void Game::Setup(Scenes scene)
 			serveButton->SetHighlightShader(resourceManager.RetrieveShader(Shaders::Outline, sf::Shader::Fragment), 1);
 			serveButton->SetClickTexture(Textures::SquareButtonUp, Textures::SquareButtonDown);
 			Text* serveDrinkText = ObjectManager::CreateText("ServeDrinkButtonText", scene, Fonts::Hughs, "Serve", sf::Vector2f(0, 80));
-			serveDrinkText->SetParent(serveDrinkButton);
+			serveDrinkText->SetParent(serveDrinkButton, false);
 
 			GameObject* addGlassButton = ObjectManager::CreateObject("AddGlassButton", scene, Textures::GlassCup, sf::Vector2f(80, -480));
 			addGlassButton->SetScale(sf::Vector2f(0.05f, 0.05f));
@@ -160,7 +169,7 @@ void Game::Setup(Scenes scene)
 			pourButtonComp->SetClickTexture(Textures::SquareButtonUp, Textures::SquareButtonDown);
 			pourButtonComp->click.push_back([this]() { this->Pour(); });
 			Text* pourButtonText = ObjectManager::CreateText("PourButtonText", scene, Fonts::Hughs, "Pour", sf::Vector2f(0, 10));
-			pourButtonText->SetParent(pourButton);
+			pourButtonText->SetParent(pourButton, false);
 			pourButtonText->SetScale(sf::Vector2f(0.5f, 1));
 
 			dialogueBox = ObjectManager::CreateObject("DialogueBox", scene, Textures::DialogueBox, sf::Vector2f(-GameSettings::resolutionWidthHalf / 2 - 80, -50));
@@ -170,16 +179,37 @@ void Game::Setup(Scenes scene)
 				if (dialogueTreeIndex >= currentDialogueTree.size()) 
 				{
 					dialogueTreeIndex = currentDialogueTree.size() - 1;
-					dialogueBox->SetVisible(false);
+					dialogueBox->SetActive(false);
 					currentGameState = GameState::WithCustomer;
+					switch (talkingMode)
+					{
+					case TalkingMode::None:
+						std::cout << "Wtf how did this happen";
+						break;
+					case TalkingMode::Questions:
+						break;
+					case TalkingMode::Reaction:
+						SendCustomerToTable();
+						break;
+					}
+
+
+					questionsAllowed--;
+					if (questionsAllowed > 0)
+					{
+						for (int i = 0; i < (int)DialogueOptions::Length - 1; i++)
+						{
+							dialogueButtons[(DialogueOptions)i]->gameObject->SetActive(true);
+						}
+					}
 				}
 			});
 			currentDisplayedDialogue = ObjectManager::CreateText("DialogueBoxText", scene, Fonts::Hughs, "Nothin");
 			currentDisplayedDialogue->SetSize(40);
 			currentDisplayedDialogue->SetColor(sf::Color::Black);
 			currentDisplayedDialogue->SetLayer(5);
-			currentDisplayedDialogue->SetParent(dialogueBox);
-			dialogueBox->SetVisible(false);
+			currentDisplayedDialogue->SetParent(dialogueBox, false);
+			dialogueBox->SetActive(false);
 
 			//Creating the dialogue buttons
 			for (int i = 0; i < (int)DialogueOptions::Length; i++)
@@ -196,6 +226,11 @@ void Game::Setup(Scenes scene)
 						currentDialogueTree = currentCustomer->customerDialogue.GetDialogue((DialogueOptions)index);
 						currentGameState = GameState::CustomerTalking;
 						dialogueTreeIndex = 0;
+						talkingMode = TalkingMode::Questions;
+						for (int i = 0; i < (int)DialogueOptions::Length; i++)
+						{
+							dialogueButtons[(DialogueOptions)i]->gameObject->SetActive(false);
+						}
 					}
 				});
 				diaButton->SetActive(false);
@@ -216,7 +251,7 @@ void Game::Setup(Scenes scene)
 					drinkTapperButton->SetSprite(resourceManager.RetrieveTexture(Textures::SquareButtonDown));
 
 				Text* tapperText = ObjectManager::CreateText(name + "Text", scene, Fonts::Hughs, drinkName, sf::Vector2f(-100,5));
-				tapperText->SetParent(drinkTapperButton);
+				tapperText->SetParent(drinkTapperButton, false);
 			}
 
 			for (size_t i = 0; i < buttons.size(); i++)
@@ -243,45 +278,48 @@ void Game::Setup(Scenes scene)
 
 void Game::ServeDrink()
 {
-	if (currentGlass != nullptr && !currentGlass->IsDestroyed())
+	if (currentGlass != nullptr && !currentGlass->IsDestroyed() && currentCustomer != nullptr)
 	{
-		CustomerState customerReaction = CustomerState::Null;
-		currentGlass->GetComponent<Move>(Comp::Move)->LerpTo(counter->GetPosition() + sf::Vector2f(0, 200), 2, [this, &customerReaction]() 
+		currentGlass->GetComponent<Move>(Comp::Move)->LerpTo(counter->GetPosition() + sf::Vector2f(0, 200), 2, [this]() 
 		{ 
-			if(currentCustomer != nullptr) 
-				customerReaction = currentCustomer->EvaluateDrink(currentDrink); 
-			EvaluateCustomerReaction(customerReaction);
+			currentReaction = currentCustomer->EvaluateDrink(currentDrink); 
+			currentGameState = GameState::CustomerThinking;
 		});
 		drinkHasBeenServed = true;
 	}
 }
 
-void Game::EvaluateCustomerReaction(CustomerState reaction)
+void Game::EvaluateCustomerReaction(CustomerReaction reaction)
 {
 	//Idk do some shit based on what the customer thought.
 	//After all, the customer is always right.
 	//Unless they died, I guess we won't really care about their opinion then.
 	switch (reaction)
 	{
-	case CustomerState::Null:
-		std::cout << "Wtf, the user served a drink when there isn't a customer... weirdo.";
-		break;
-	case CustomerState::Liked:
-		break;
-	case CustomerState::Neutral:
+		case CustomerReaction::Liked:
 
-		break;
-	case CustomerState::Disliked:
+			break;
+		case CustomerReaction::Neutral:
 
-		break;
-	case CustomerState::Dead:
-		currentCustomer->gameObject->Destroy();
-		currentCustomer = nullptr;
-		currentGameState = GameState::Open;
-		EmptyDrink();
-		break;
+			break;
+		case CustomerReaction::Disliked:
+
+			break;
+		case CustomerReaction::Dead:
+			std::cout << "Holy shit you killed them!";
+			currentCustomer->gameObject->Destroy();
+			currentCustomer = nullptr;
+			currentGameState = GameState::Open;
+			EmptyDrink();
+			break;
 	}
-	
+	if (reaction != CustomerReaction::Dead)
+	{
+		currentDialogueTree = currentCustomer->customerDialogue.GetDialogue(reaction);
+		currentGameState = GameState::CustomerTalking;
+		dialogueTreeIndex = 0;
+		talkingMode = TalkingMode::Reaction;
+	}
 }
 
 void Game::SetNewGlass()
@@ -304,7 +342,7 @@ void Game::CreateLiquidAsset()
 	DestroyCurrentLiquid();
 	currentLiquid = ObjectManager::CreateObject("Liquid", Scenes::SceneAll, Textures::Liquid);
 	currentLiquid->SetLayer(10);
-	currentLiquid->SetParent(currentGlass);
+	currentLiquid->SetParent(currentGlass, false);
 	currentLiquid->SetFillMode(FillMode::BottomToTop);
 	currentLiquid->SetFillAmount(0);
 }
@@ -333,6 +371,52 @@ void Game::EmptyDrink()
 	liquidStream->SetActive(false);
 }
 
+void Game::SendCustomerToTable()
+{
+	GameObject* table = nullptr;
+	bool last = false;
+	for (int i = 0; i < tables.size(); i++)
+	{
+		//Checking if they have any children, cause a customer is added as a child. Gonna make this less stupid in the future.
+		if (tables[i]->GetChildren().size() == 0)
+		{
+			table = tables[i];
+			last = i == 2;
+			break;
+		}
+	}
+
+	if (table == nullptr)
+	{
+		table = tables[lastTableLeft];
+		GameObject* oldCustomer = (GameObject*)table->GetChildren()[0];
+		oldCustomer->SetParent(nullptr);
+		oldCustomer->GetComponent<Move>(Comp::Move)->LerpTo(sf::Vector2f(700, 100), 3, [this,oldCustomer]() {
+			oldCustomer->GetChildren()[0]->GetChildren()[0]->Destroy(); //Destroy Liquid
+			oldCustomer->GetChildren()[0]->Destroy(); //Destroy Glass
+			oldCustomer->Destroy();
+		});
+		lastTableLeft++;
+		if (lastTableLeft > tables.size())
+			lastTableLeft = 0;
+	}
+	GameObject* glass = currentGlass;
+	currentGlass = nullptr;
+	currentLiquid = nullptr;
+
+	Move* customerMove = currentCustomer->gameObject->GetComponent<Move>(Comp::Move);
+	glass->SetParent(customerMove->gameObject);
+	glass->GetComponent<Move>(Comp::Move)->LerpTo(glass->GetPosition() + sf::Vector2f(0, 30), 1);
+	customerMove->LerpTo(table->GetPosition() + sf::Vector2f(last ? -150 : 150, 50), sf::Vector2f(0.2f, 0.2f), 1, [this, customerMove, table]() {
+		currentCustomer->gameObject->SetLayer(2);
+		customerMove->LerpTo(table->GetPosition() + sf::Vector2f(0, 80), 0.5f, [this, table]() {
+			currentCustomer->gameObject->SetParent(table);
+
+			currentGameState = GameState::Open;
+		});
+	});
+}
+
 void Game::Open()
 {
 	if (currentGameState == GameState::PreOpen) 
@@ -359,6 +443,7 @@ void Game::CustomerEnter()
 {
 	//A customer has appeared
 	GameObject* newCustomer = ObjectManager::CreateObject("Customer", Scenes::SceneAll, Textures::Man, doorPosition);
+	newCustomer->SetLayer(4);
 	newCustomer->name = "Customer #"+newCustomer->GetUniqueID(); //We'll give them proper names... once they've earned them!
 	newCustomer->SetScale(sf::Vector2f(0.4f, 0.4f));
 	newCustomer->AddComponent<Move>(Comp::Move)->LerpTo(counter->GetPosition() + sf::Vector2f(0, 150), sf::Vector2f(0.5f, 0.5f), 3, [this]()
@@ -367,6 +452,7 @@ void Game::CustomerEnter()
 		{
 			dialogueButtons[(DialogueOptions)i]->gameObject->SetActive(true);
 		}
+		questionsAllowed = maxQuestionCount;
 	});
 
 	Customer* customer = newCustomer->AddComponent<Customer>(Comp::Customer);
@@ -400,7 +486,8 @@ void Game::Run(sf::RenderWindow& window,sf::View& view, sf::View& viewUI, sf::Vi
 	sf::Clock clock; 
 	srand(time(NULL));
 
-	float newCustomerFrequency = rand()%3+2;
+	float newCustomerFrequency = 1;
+	const float thinkingTime = 1;
 	float customerTimer = 0;
 
 	//Game loop
@@ -424,14 +511,23 @@ void Game::Run(sf::RenderWindow& window,sf::View& view, sf::View& viewUI, sf::Vi
 			{
 				CustomerEnter();
 				currentGameState = GameState::WithCustomer;
+				newCustomerFrequency = rand() % 3 + 2;
 			}
 			break;
 		case GameState::WithCustomer:
 			customerTimer = 0;
 			
 			break;
+		case GameState::CustomerThinking:
+			customerTimer += deltaTime;
+			if (customerTimer >= thinkingTime)
+			{
+				EvaluateCustomerReaction(currentReaction);
+				customerTimer = 0;
+			}
+			break;
 		case GameState::CustomerTalking:
-			dialogueBox->SetVisible(true);
+			dialogueBox->SetActive(true);
 			currentDisplayedDialogue->SetText(currentDialogueTree[dialogueTreeIndex]);
 			currentDisplayedDialogue->SetColor(sf::Color::Black);
 			break;

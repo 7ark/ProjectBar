@@ -10,7 +10,8 @@ public:
 	void Draw(sf::RenderTarget& target);
 	virtual void Update(float deltaTime) {};
 
-	void SetParent(Object* obj);
+	void SetParent(Object* obj, bool adjustToLocal = true);
+	Object* GetParent() { return parent; }
 
 	const std::vector<Object*>& GetChildren() const
 	{
@@ -20,16 +21,18 @@ public:
 	//Movement
 	void SetPosition(sf::Vector2f pos) { transform.setPosition(pos.x, -pos.y); }
 	sf::Vector2f GetPosition() { return sf::Vector2f(transform.getPosition().x,-transform.getPosition().y); }
+	sf::Vector2f GetLocalPosition();
 	void Translate(sf::Vector2f pos) { transform.move(pos); }
 
 	void SetScale(sf::Vector2f scale) { transform.setScale(scale); }
 	sf::Vector2f GetScale() { return transform.getScale(); }
+	sf::Vector2f GetLocalScale();
 	void Scale(sf::Vector2f scale) { transform.scale(scale); }
 
 	void SetRotation(float angle) { transform.setRotation(angle); }
 	float GetRotation() { return transform.getRotation(); }
+	float GetLocalRotation();
 	void Rotate(float angle) { transform.rotate(angle); }
-
 
 	//Setters
 	void SetActive(bool active) { if(!destroyed) enabled = active; }

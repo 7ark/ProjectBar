@@ -6,7 +6,6 @@
 #include "Dialogue.h"
 
 enum class Gender { Male, Female, Other };
-enum class CustomerState { Null, Liked, Neutral, Disliked, Dead };
 
 class Customer : public Component
 {
@@ -23,9 +22,9 @@ public:
 	std::vector<LiquidTypes> dislikedLiquids;
 	Dialogue customerDialogue;
 
-	CustomerState EvaluateDrink(Drink drink);
+	CustomerReaction EvaluateDrink(Drink drink);
 
 private:
-	CustomerState currentState = CustomerState::Neutral;
+	CustomerReaction currentState = CustomerReaction::Neutral;
 };
 
